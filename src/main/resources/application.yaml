@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: VCS2
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vcs2
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
