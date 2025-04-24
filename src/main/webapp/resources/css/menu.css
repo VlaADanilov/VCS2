@@ -1,0 +1,166 @@
+body{
+    background: #d0d0d0; /* Меняется фон экрана, выбирается здесь */
+}
+
+#wrapper{ /* Оболочка страницы сайта */
+    width: 900px; /* Меняется ширина страницы */
+    margin: 0 auto;
+    background:#f2e8c9; /* Меняется задний фон страницы */
+}
+
+/* Шапка сайта */
+
+#header{
+    position:relative; /* Задаём блоку относительное позиционирование для того, чтобы затем размещать, в нём другие элементы и позиционировать относительно его границ поверх фоновой картинки и заголовка */
+    height: 200px; /* Высота шапки */
+    background-color: #ffffff; /* Фон шапки */
+    margin-bottom: 5px; /* Нижний отступ шапки от остального контента */
+    border-radius: 5px; /* Закругляются углы блока */
+    box-shadow: rgba(0,0,0,0.5) 0px 1px 3px; /* Тень. Визуально приподнимает блок над оболочкой */
+}
+.fone{
+    float: left; /* Разрешаем наплывание других элементов на картинку */
+    width: auto;
+    height: 90%;
+    margin: -30px 0 0 200px; /* Размещаем картинку в блоке header. 1-я и 3-я цифры - двигаем вверх-вниз, 2-я и 4-я цифры - двигаем вправо-влево */
+}
+.logo{
+    position: absolute;
+    float: left;
+    width: auto;
+    height: 50%;
+    margin: -30px 0 0 65px /* Размещаем картинку в блоке header. 1-я и 3-я цифры - двигаем вверх-вниз, 2-я и 4-я цифры - двигаем вправо-влево */
+}
+.logo_bottom{
+    float: right;
+    height: 100%;
+    width: auto;
+    margin: 0 0 0 0;
+}
+h1{ /* Заголовок сайта */
+    margin:0 0 10px 40px; /* Заголовок двигается верх-вправо-вниз-влево. */
+    color:#464451; /* Цвет заголовка */
+}
+.nomer{ /*Подзаголовок (номер телефона)*/
+    position:absolute; /* Позиционируем абсолютно подзаголовок, относительно границ блока header. Также можно разместить в шапке сайта ещё другие картинки и абзацы поверх фоновой картинки и заголовка */
+    top:5px; /* Двигается вверх-вниз */
+    left:680px; /* Двигается вправо-влево */
+    font-size: 25px; /* Размер букв подзаголовка */
+    font-style:italic; /* Курсив */
+    font-weight:bold; /* Жирный */
+    color:#464451; /* Цвет букв подзаголовка */
+}
+
+/* Сайдбар (колонка справа) */
+
+#sidebar{ /* Блок сайдбара */
+    background-color: #ffffff; /* Фон блока */
+    width: 180px; /* Ширина блока */
+    padding: 10px; /* Отступ текста от краёв */
+    float: right; /* Размещаем блок справа от других элементов, наплывание или обтекание справа). Если делать сайдбар слева, то значение right меняем на left */
+    border-radius: 5px; /* Закругляем углы блока */
+    box-shadow: rgba(0,0,0,0.5) 0px 1px 3px; /* Задаём блоку тень */
+}
+.marcer{ /* Галочки маркеры меню */
+    float: left; /* Размещаем слева от текста */
+    height: 10px;
+    width: 10px;
+    margin: 5px 5px 0 0; /* Двигаются вверх-вправо-вниз-влево */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 16px;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+/* Контент (статья) */
+
+#content{ /* Блок контента */
+    margin-bottom: 5px; /* Отступ блока статьи от блока подвала */
+    width: 676px; /* Ширина статьи */
+    padding: 10px; /* Отступ текста от краёв блока */
+    background: #ffffff; /* Фон статьи */
+    border-radius: 5px;
+    box-shadow: rgba(0,0,0,0.5) 0px 1px 3px;
+}
+.left{ /* Картинка в тексте слева */
+    float: left;
+    width: 30%;
+    height: auto;
+    margin: 30px 7px 7px 7px;
+}
+.right{ /* Картинка в тексте справа */
+    width: 30%;
+    height: auto;
+    float: right;
+    margin: -35px 0 7px 7px;
+}
+/* Подвал */
+
+#footer{ /* Блок подвала */
+    height:80px; /* Высота блока подвала */
+    background-color: #ffffff; /* Фон блока подвала */
+    margin-bottom: 10px; /* Отступ снизу */
+    border-radius: 5px; /* Закруглённые углы */
+    box-shadow: rgba(0,0,0,0.5) 0px 1px 3px; /* Тень блока */
+}
+.clear{ /* Запрет наплывания. Устанавливается для того, чтобы блок контента, при заполнении текстом и изображениями не наплывал на подвал */
+    clear: both;
+}
+.fon{ /* Номер телефона */
+    float:left; /* Разрешаем другим элементам обтекать абзац справа */
+    margin:20px 0 0 20px;
+}
+.fax{ /* Номер факса */
+    float:left;
+    margin:20px 0 0 60px;
+}
+.mail{ /* Адрес E-mail */
+    float:left;
+    margin:20px 0 0 60px;
+}
+#delete_polz{
+    height: 10px;
+    width: 10px;
+    opacity: 0.6;
+}
+#delete_polz:hover{
+    opacity: 1;
+}
+#req {
+    display: none;
+    animation-duration: 1.5s;
+    animation-fill-mode: both;
+    animation-name: fadeIn;
+}
+
+#req.open {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

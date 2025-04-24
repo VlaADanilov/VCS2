@@ -13,3 +13,10 @@ spring:
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
