@@ -1,10 +1,13 @@
 spring:
   application:
     name: VCS2
-
   jpa:
     hibernate:
       ddl-auto: update
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
   datasource:
     url: jdbc:postgresql://localhost:5432/vcs2
     username: postgres

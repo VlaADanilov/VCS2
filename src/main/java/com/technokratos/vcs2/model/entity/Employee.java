@@ -1,6 +1,6 @@
-package com.technokratos.vcs2.model;
+package com.technokratos.vcs2.model.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,6 @@ import java.util.UUID;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;

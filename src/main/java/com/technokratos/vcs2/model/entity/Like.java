@@ -1,6 +1,6 @@
-package com.technokratos.vcs2.model;
+package com.technokratos.vcs2.model.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,14 +9,11 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "report")
-public class Report {
+@Table(name = "like_table")
+public class Like {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    private String comment;
 
     @ManyToOne
     private User user;

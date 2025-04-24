@@ -1,20 +1,23 @@
-package com.technokratos.vcs2.model;
+package com.technokratos.vcs2.model.entity;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "auto")
 public class Auto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String model;
@@ -23,6 +26,8 @@ public class Auto {
     private Integer mileage;
     private String city;
     private String description;
+
+
 
     @OneToMany
     private Set<AutoImage> images;
