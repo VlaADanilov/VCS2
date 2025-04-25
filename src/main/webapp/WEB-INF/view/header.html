@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- Определяем фрагмент "header" -->
+<div th:fragment="header">
+    <div id="header">
+        <!--Заголовок сайта-->
+        <h1>Автомаркет</h1>
+        <!--Описание (телефон)-->
+        <p class="nomer"> +7 953 015 62 18</p>
+        <!--Фоновая картинка в шапке сайта-->
+        <img class="logo" th:src="@{/resources/icons/логотип-без-фона.png}">
+        <img class="fone" th:src="@{/resources/pages/XXL.jpg}">
+    </div>
+</div>
+</body>
+</html>
