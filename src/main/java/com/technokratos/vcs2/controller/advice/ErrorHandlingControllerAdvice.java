@@ -1,5 +1,7 @@
 package com.technokratos.vcs2.controller.advice;
 
+import com.technokratos.vcs2.exception.RegistrationException;
+import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
 import com.technokratos.vcs2.model.dto.response.Violation;
 import org.springframework.http.HttpStatus;
@@ -32,5 +34,14 @@ public class ErrorHandlingControllerAdvice {
                         }
                 ).toList();
         return new ValidationErrorResponse(violations);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(RegistrationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessage onRegistrationException(
+            RegistrationException ex
+    ) {
+        return new ExceptionMessage(ex.getMessage());
     }
 }

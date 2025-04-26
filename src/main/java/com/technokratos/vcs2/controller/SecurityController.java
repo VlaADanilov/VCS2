@@ -48,6 +48,6 @@ public class SecurityController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addUser(@RequestBody RegisterUserDto regDto,
                           Model model) {
-        UUID uuid = userService.saveUser(regDto);
+        userService.saveUser(regDto);
     }
 }

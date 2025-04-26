@@ -21,26 +21,42 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response, status, xhr) {
+                $('#errors').empty();
+                $('#success').empty();
                 if (xhr.status === 201) {
-                    window.location.href = redirectUrl;
+                    $('#success').html("success");
                 }
             },
             error: function (xhr, status, error) {
-                if (xhr.status === 400) {
-                    const errors = JSON.parse(xhr.responseText);
+                $('#errors').empty();
+                $('#success').empty();
 
-                    // Очищаем предыдущие сообщения об ошибках
-                    $('#errors').empty();
+                try {
+                    const response = JSON.parse(xhr.responseText);
 
-                    // Формируем текст ошибок
-                    const errorMessages = errors.violations.map(violation =>
-                        `${violation.fieldName.charAt(0).toUpperCase() + violation.fieldName.slice(1)}: ${violation.message}`
-                    ).join('<br>');
+                    if (xhr.status === 400) {
+                        // Проверяем структуру JSON
+                        if (response.violations && Array.isArray(response.violations)) {
+                            // Формируем текст ошибок из массива violations
+                            const errorMessages = response.violations.map(violation =>
+                                `${violation.fieldName.charAt(0).toUpperCase() + violation.fieldName.slice(1)}: ${violation.message}`
+                            ).join('<br>');
 
-                    // Выводим ошибки в div
-                    $('#errors').html(errorMessages);
-                } else {
-                    alert("Ошибка регистрации: " + xhr.responseText);
+                            $('#errors').html(errorMessages);
+                        } else if (response.message) {
+                            $('#errors').html(response.message);
+                        } else {
+                            // Неизвестная структура JSON
+                            $('#errors').html("Неизвестная ошибка. Пожалуйста, попробуйте снова.");
+                        }
+                    } else {
+                        // Общая ошибка для других статусов
+                        $('#errors').html("Ошибка регистрации: " + xhr.responseText);
+                    }
+                } catch (e) {
+                    // Если JSON не удалось распарсить
+                    console.error("Ошибка парсинга JSON:", e);
+                    $('#errors').html("Произошла ошибка. Пожалуйста, обратитесь к администратору.");
                 }
             }
         });
