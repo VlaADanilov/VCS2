@@ -24,7 +24,12 @@ public class SecurityController {
 
     @GetMapping("/login")
     @PreAuthorize("isAnonymous()")
-    public String login(Model model) {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        Model model
+    ) {
+        if (error != null) {
+            model.addAttribute("loginError", true);
+        }
         model.addAttribute("loginForm", new LoginForm());
         return "login";
     }
@@ -41,7 +46,7 @@ public class SecurityController {
     @PreAuthorize("isAnonymous()")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public void addUser(@ModelAttribute("regDto") @Valid RegisterUserDto regDto,
+    public void addUser(@RequestBody RegisterUserDto regDto,
                           Model model) {
         UUID uuid = userService.saveUser(regDto);
     }

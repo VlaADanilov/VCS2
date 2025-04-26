@@ -1,0 +1,91 @@
+
+/* Стили для контейнера формы */
+#registrationForm {
+    max-width: 400px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+/* Стили для заголовков меток (labels) */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+    text-align: left; /* Выравнивание текста меток */
+}
+
+/* Стили для полей ввода */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #007bff; /* Голубая граница при фокусе */
+    outline: none;
+}
+
+/* Стили для кнопки регистрации */
+#registrationButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffe851; /* Голубой фон */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#registrationButton:hover {
+    background-color: #e9d02c; /* Темнее при наведении */
+}
+
+/* Стили для сообщений об ошибках */
+.errorMessages {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    #registrationForm {
+        padding: 15px;
+    }
+}
+
+/* Стили для ссылки */
+a {
+    color: #007bff; /* Голубой цвет */
+    text-decoration: none; /* Убираем подчеркивание */
+    transition: color 0.3s ease; /* Плавная анимация */
+    margin-bottom: 20px; /* Отступ снизу */
+    display: inline-block; /* Обеспечивает корректное применение margin */
+}
+
+a:hover {
+    color: #0056b3; /* Темнее при наведении */
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+
+#loginError {
+    color: red;
+    margin-bottom: 10px;
+}

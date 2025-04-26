@@ -18,5 +18,6 @@ public class RegisterUserDto {
     private String password;
 
     @Email
+    @NotBlank
     private String email;
 }
