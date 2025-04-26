@@ -29,7 +29,7 @@ public class User implements UserDetails {
 
     private String password;
 
-    private String phone;
+    private String email;
 
     private String role;
 

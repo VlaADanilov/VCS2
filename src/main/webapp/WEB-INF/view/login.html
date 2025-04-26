@@ -8,11 +8,16 @@
 <body>
 
 <div>
-    <form method="POST" th:action="@{/login}">
+    <form method="POST" th:action="@{/login}" th:object="${loginForm}">
         <h2>Вход в систему</h2>
         <div>
-            <input name="username" type="text" placeholder="Username" autofocus />
-            <input name="password" type="password" placeholder="Password" />
+            <label for="username">Login: </label>
+            <input type="text" id="username" th:field="*{username}" />
+            <br/>
+
+            <label for="password">Password: </label>
+            <input type="password" id="password" th:field="*{password}" />
+            <br/>
             <button type="submit">Войти</button>
             <h4><a th:href="@{/registration}">Зарегистрироваться</a></h4>
         </div>
