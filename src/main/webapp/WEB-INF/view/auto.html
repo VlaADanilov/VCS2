@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список автомобилей</title>
+    <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/onePage.css}">
+    <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
+</head>
+<body>
+    <div id="wrapper">
+        <div id = "header" align="center">
+            <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/auto}'|">
+            <h1>Объявление</h1>
+        </div>
+        <div id = "content">
+            <div id = "left-content">
+            </div>
+            <div id = "right-pannel" th:object="${auto}">
+                <div id = "right-content">
+                    <p><strong>Марка: </strong> <span th:text="${brand.name}"></span></p>
+                    <p ><strong>Модель: </strong><span th:text="*{model}"></span></p>
+                    <p><strong>Страна производства: </strong><span th:text="${brand.country}"></span></p>
+                    <p><strong>Год выпуска: </strong><span th:text="*{year}"></span></p>
+                    <p><strong>Цена: </strong><span th:text="*{price}"></span> руб.</p>
+                    <p><strong>Пробег: </strong><span th:text="*{mileage}"></span> км.</p>
+                    <p><strong>Описание: </strong><span th:text="*{description}"></span></p>
+                </div>
+                <div id = "bottom-content">
+                    <p><strong>Телефон для связи: </strong> <span th:text="*{phone}"></span></p>
+                    <p><strong>Город: </strong> <span th:text="*{city}"></span></p>
+                    <p><strong>Имя пользователя: </strong> <span th:text="${user.username}"></span></p>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{footer :: footer}"></div>
+    </div>
+</body>

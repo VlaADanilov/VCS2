@@ -1,4 +1,4 @@
-package com.technokratos.vcs2.exception;
+package com.technokratos.vcs2.exception.registration;
 
 public class EmailExistsEsception extends RegistrationException{
     public EmailExistsEsception(String email) {

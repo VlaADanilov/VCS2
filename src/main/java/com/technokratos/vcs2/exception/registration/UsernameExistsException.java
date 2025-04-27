@@ -1,4 +1,4 @@
-package com.technokratos.vcs2.exception;
+package com.technokratos.vcs2.exception.registration;
 
 public class UsernameExistsException extends RegistrationException{
     public UsernameExistsException(String username) {

@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список автомобилей</title>
+    <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/list.css}">
+    <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
+</head>
+<body>
+    <div id="wrapper">
+        <div id = "header" align="center">
+            <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/}'|">
+            <h1>Список объявлений</h1>
+        </div>
+        <div>
+            <ul class = "list1a">
+                    <li th:each="car : ${list}" th:object="${car}">
+                        <p class="nameOfAuthor" th:text="*{username}"></p>
+                        <p>
+                            <b>Марка: </b>
+                            <span th:text="*{brandName}"></span>
+                            <b> Модель: </b>
+                            <span th:text="*{autoInfo.model}"></span>
+                            <b> Год выпуска: </b>
+                            <span th:text="*{autoInfo.year}"></span>
+                            <b> Цена: </b>
+                            <span th:text="*{autoInfo.price}"></span>
+                            <b> Пробег: </b>
+                            <span th:text="*{autoInfo.mileage}"></span>
+                            <button class="buttonw" type="button" th:attr="onclick='window.location.href = \'' + @{/auto/{id}(id=*{id})} + '\''">Подробнее</button>
+                        </p>
+                        <span class = "nameOfCity" th:text="*{autoInfo.city}">${car.getCity()}</span>
+                    </li>
+            </ul>
+        </div>
+        <div th:replace="~{footer :: footer}"></div>
+    </div>
+</body>

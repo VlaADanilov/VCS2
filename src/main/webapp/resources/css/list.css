@@ -1,0 +1,46 @@
+#header{
+    position:relative; /* Задаём блоку относительное позиционирование для того, чтобы затем размещать, в нём другие элементы и позиционировать относительно его границ поверх фоновой картинки и заголовка */
+    height: 50px; /* Высота шапки */
+    background-color: #ffffff; /* Фон шапки */
+    margin-bottom: 5px; /* Нижний отступ шапки от остального контента */
+    border-radius: 5px; /* Закругляются углы блока */
+    box-shadow: rgba(0,0,0,0.5) 0px 1px 3px; /* Тень. Визуально приподнимает блок над оболочкой */
+}
+.myImage{
+    opacity: 0.6;
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin: 0 0 0 0;
+}
+.myImage:hover{
+    opacity: 1;
+}
+
+.list1a {
+    margin: 20px 0 0;
+    padding:0;
+    list-style: none;
+    counter-reset: li;
+}
+.list1a li {
+    border: 2px solid #337AB7;
+    background: #EBF3FA;
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 16px 10px;
+}
+.nameOfAuthor{
+    position: absolute;
+    left: 11px;
+    top: 3px;
+    font-size: 12px;
+}
+.nameOfCity{
+    position: absolute;
+    left: 11px;
+    bottom: 3px;
+    font-size: 12px;
+}

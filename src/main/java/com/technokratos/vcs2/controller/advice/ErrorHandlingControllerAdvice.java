@@ -1,11 +1,10 @@
 package com.technokratos.vcs2.controller.advice;
 
-import com.technokratos.vcs2.exception.RegistrationException;
+import com.technokratos.vcs2.exception.registration.RegistrationException;
 import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
 import com.technokratos.vcs2.model.dto.response.Violation;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

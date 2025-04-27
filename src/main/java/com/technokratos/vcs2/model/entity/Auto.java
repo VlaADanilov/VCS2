@@ -26,15 +26,16 @@ public class Auto {
     private Integer mileage;
     private String city;
     private String description;
+    private String phone;
 
 
 
     @OneToMany
     private Set<AutoImage> images;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Brand brand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 }

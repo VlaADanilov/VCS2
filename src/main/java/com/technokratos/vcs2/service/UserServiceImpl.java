@@ -1,12 +1,12 @@
 package com.technokratos.vcs2.service;
 
-import com.technokratos.vcs2.exception.EmailExistsEsception;
-import com.technokratos.vcs2.exception.UsernameExistsException;
+import com.technokratos.vcs2.exception.notFound.NotFoundException;
+import com.technokratos.vcs2.exception.registration.EmailExistsEsception;
+import com.technokratos.vcs2.exception.registration.UsernameExistsException;
 import com.technokratos.vcs2.model.dto.request.RegisterUserDto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -35,5 +35,11 @@ public class UserServiceImpl {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("DEFAULT");
         return userRepository.save(user).getId();
+    }
+
+    public User findUserByCarId(UUID car_id) {
+        return userRepository.findByAuto(car_id).orElseThrow(
+                () ->
+                        new NotFoundException("User not found in car with id %s".formatted(car_id)));
     }
 }
