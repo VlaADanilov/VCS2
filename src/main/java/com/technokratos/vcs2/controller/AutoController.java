@@ -1,10 +1,13 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.entity.Auto;
+import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.BrandService;
 import com.technokratos.vcs2.service.UserServiceImpl;
+import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,6 +43,8 @@ public class AutoController {
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("brand", brandService.getBrandByAutoId(carId));
         model.addAttribute("user", userService.findUserByCarId(carId));
+        model.addAttribute("showIcons",showIcons(carId));
+        model.addAttribute("autoId", carId.toString());
         //TODO images
         return "auto";
     }
@@ -58,5 +63,19 @@ public class AutoController {
     @ResponseBody
     public UUID addAuto(@RequestBody AutoRequestDto auto) {
         return autoService.addAuto(auto);
+    }
+
+    @DeleteMapping("/{car_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @PreAuthorize("@securityService.canDelete(#carId, authentication.name) " +
+            "or hasAnyRole('ADMIN', 'MODERATOR')")
+    public void deleteAuto(@PathVariable("car_id") UUID carId) {
+        autoService.deleteAuto(carId);
+    }
+
+    private boolean showIcons(UUID autoId) {
+        User user = UserReturner.getCurrentUser().get();
+        return autoService.isOwner(autoId, user.getUsername()) || user.getRole().equals(Role.ROLE_ADMIN.toString()) || user.getRole().equals(Role.ROLE_MODERATOR.toString());
     }
 }

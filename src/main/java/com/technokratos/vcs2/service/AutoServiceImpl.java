@@ -94,6 +94,15 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public void deleteAuto(UUID id) {
+        if (!autoRepository.existsById(id)) {
+            throw new AutoNotFoundException(id);
+        }
+        autoRepository.deleteById(id);
+    }
 
+    public boolean isOwner(UUID autoId, String username) {
+        return autoRepository.findById(autoId)
+                .map(auto -> auto.getUser().getUsername().equals(username))
+                .orElse(false);
     }
 }

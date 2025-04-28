@@ -12,8 +12,18 @@
 
     <div align="center">
         <img th:src="@{/resources/icons/not-found.svg}" alt="Not found page" width="200" height="200">
-        <p th:text="${message}" style="color: red">Error text</p>
-        <a th:href="@{${back}}">Back</a>
+        <div th:if="${er_message == null}">
+            <p style="color: red">Sorry, error</p>
+        </div>
+        <div th:if="${er_message != null}">
+            <p th:text="${er_message}" style="color: red">Error text</p>
+        </div>
+        <div th:if="${back == null}">
+            <a th:href="@{/}">Back</a>
+        </div>
+        <div th:if="${back != null}">
+            <a th:href="@{${back}}">Back</a>
+        </div>
     </div>
 
     <div th:replace="~{footer :: footer}"></div>

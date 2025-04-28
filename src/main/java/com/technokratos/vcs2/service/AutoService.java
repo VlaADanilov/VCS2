@@ -24,5 +24,5 @@ public interface AutoService {
 
     void deleteAuto(UUID id);
 
-
+    boolean isOwner(UUID autoId, String username);
 }

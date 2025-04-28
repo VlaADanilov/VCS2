@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Список автомобилей</title>
+    <title>Информация об автомобиле</title>
     <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
     <link rel="stylesheet" th:href="@{/resources/css/onePage.css}">
     <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
@@ -10,6 +10,11 @@
     <div id="wrapper">
         <div id = "header" align="center">
             <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{${backUrl}}'|">
+            <div th:if="${showIcons == true}">
+                <img alt = "Delete image" class="myImage2" id="delete_auto"
+                     th:src="@{/resources/icons/delete-1487-svgrepo-com.svg}"
+                     th:data-url="@{/auto/{id}(id=${autoId})}" th:data-back-url="@{${backUrl}}">
+            </div>
             <h1>Объявление</h1>
         </div>
         <div id = "content">
@@ -34,4 +39,8 @@
         </div>
         <div th:replace="~{footer :: footer}"></div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script th:src="@{/resources/js/inAutoInformationPage.js}"></script>
 </body>

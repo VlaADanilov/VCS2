@@ -3,6 +3,7 @@ package com.technokratos.vcs2.service;
 import com.technokratos.vcs2.exception.notFound.NotFoundException;
 import com.technokratos.vcs2.exception.registration.EmailExistsEsception;
 import com.technokratos.vcs2.exception.registration.UsernameExistsException;
+import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.RegisterUserDto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.UserRepository;
@@ -33,7 +34,7 @@ public class UserServiceImpl {
         user.setEmail(regDto.getEmail());
         user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("DEFAULT");
+        user.setRole(Role.ROLE_DEFAULT.toString());
         return userRepository.save(user).getId();
     }
 

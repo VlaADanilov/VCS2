@@ -53,7 +53,7 @@ public class ErrorHandlingControllerAdvice {
     public String noFoundException(
             NotFoundException ex, Model model
     ) {
-        model.addAttribute("message", ex.getMessage());
+        model.addAttribute("er_message", ex.getMessage());
         model.addAttribute("back", ex.getReturnToPage());
         return "error";
     }
