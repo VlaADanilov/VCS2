@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,7 +55,8 @@ public class AutoServiceImpl implements AutoService {
                             auto.getMileage(),
                             auto.getCity(),
                             auto.getDescription(),
-                            auto.getPhone()
+                            auto.getPhone(),
+                            auto.getBrand().getId()
                     ),
                     auto.getBrand().getName()
             );
@@ -80,7 +82,8 @@ public class AutoServiceImpl implements AutoService {
                     auto.getMileage(),
                     auto.getCity(),
                     auto.getDescription(),
-                    auto.getPhone()
+                    auto.getPhone(),
+                    auto.getBrand().getId()
             );
         } else {
             throw new AutoNotFoundException(id);
@@ -89,14 +92,30 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public void updateAuto(AutoRequestDto auto, UUID id) {
+        checkForExistsAuto(id);
+        Auto result = Auto.builder()
+                .id(id)
+                .model(auto.getModel())
+                .year(auto.getYear())
+                .price(auto.getPrice())
+                .mileage(auto.getMileage())
+                .city(auto.getCity())
+                .description(auto.getDescription())
+                .brand(brandService.getReferenceById(auto.getBrand_id()))
+                .user(UserReturner.getCurrentUser().get())
+                .build();
+        autoRepository.save(result);
+    }
 
+    private void checkForExistsAuto(UUID id) {
+        if (!autoRepository.existsById(id)) {
+            throw new AutoNotFoundException(id);
+        }
     }
 
     @Override
     public void deleteAuto(UUID id) {
-        if (!autoRepository.existsById(id)) {
-            throw new AutoNotFoundException(id);
-        }
+        checkForExistsAuto(id);
         autoRepository.deleteById(id);
     }
 

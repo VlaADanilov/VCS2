@@ -14,6 +14,8 @@
                 <img alt = "Delete image" class="myImage2" id="delete_auto"
                      th:src="@{/resources/icons/delete-1487-svgrepo-com.svg}"
                      th:data-url="@{/auto/{id}(id=${autoId})}" th:data-back-url="@{${backUrl}}">
+                <img alt = "Update image" class="myImage2" th:src="@{/resources/icons/settings-2-svgrepo-com.svg}"
+                     th:onclick="|location.href='@{/auto/{id}/updateForm(id=${autoId})}'|">
             </div>
             <h1>Объявление</h1>
         </div>

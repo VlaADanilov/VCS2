@@ -20,7 +20,7 @@ public interface AutoService {
 
     AutoResponseDto getAutoById(UUID id);
 
-    void updateAuto(AutoRequestDto auto, UUID id);
+    void updateAuto(@Valid AutoRequestDto auto, UUID id);
 
     void deleteAuto(UUID id);
 

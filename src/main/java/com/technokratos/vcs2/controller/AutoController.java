@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller()
@@ -51,7 +52,7 @@ public class AutoController {
 
     @GetMapping("/add")
     @PreAuthorize("isAuthenticated()")
-    public String addAuto(Model model) {
+    public String addAutoForm(Model model) {
         model.addAttribute("brands", brandService.getBrands());
 
         return "add_auto_form";
@@ -74,8 +75,31 @@ public class AutoController {
         autoService.deleteAuto(carId);
     }
 
+    @GetMapping("/{car_id}/updateForm")
+    @PreAuthorize("@securityService.canDelete(#carId, authentication.name) " +
+            "or hasAnyRole('ADMIN', 'MODERATOR')")
+    public String updateAutoForm(@PathVariable("car_id") UUID carId, Model model) {
+        model.addAttribute("brands", brandService.getBrands());
+        model.addAttribute("auto", autoService.getAutoById(carId));
+        model.addAttribute("autoId", carId.toString());
+        return "update_auto_form.html";
+    }
+
+    @PutMapping("/{car_id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    @PreAuthorize("@securityService.canDelete(#carId, authentication.name) " +
+            "or hasAnyRole('ADMIN', 'MODERATOR')")
+    public void updateAuto(@PathVariable("car_id") UUID carId, @RequestBody AutoRequestDto auto) {
+        autoService.updateAuto(auto, carId);
+    }
+
     private boolean showIcons(UUID autoId) {
-        User user = UserReturner.getCurrentUser().get();
+        Optional<User> currentUser = UserReturner.getCurrentUser();
+        if(currentUser.isEmpty()) {
+            return false;
+        }
+        User user = currentUser.get();
         return autoService.isOwner(autoId, user.getUsername()) || user.getRole().equals(Role.ROLE_ADMIN.toString()) || user.getRole().equals(Role.ROLE_MODERATOR.toString());
     }
 }
