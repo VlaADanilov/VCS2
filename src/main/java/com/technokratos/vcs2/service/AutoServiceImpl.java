@@ -5,9 +5,10 @@ import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
 import com.technokratos.vcs2.model.dto.response.ListElementAutoResponseDto;
 import com.technokratos.vcs2.model.entity.Auto;
+import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.AutoRepository;
+import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,24 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AutoServiceImpl implements AutoService {
     private final AutoRepository autoRepository;
-
+    private final BrandService brandService;
     @Override
     public UUID addAuto(AutoRequestDto auto) {
-        return null;
+        UUID autoId = UUID.randomUUID();
+        Auto result = Auto.builder()
+                .id(autoId)
+                .model(auto.getModel())
+                .city(auto.getCity())
+                .year(auto.getYear())
+                .price(auto.getPrice())
+                .mileage(auto.getMileage())
+                .description(auto.getDescription())
+                .brand(brandService.getReferenceById(auto.getBrand_id()))
+                .build();
+        User user = UserReturner.getCurrentUser().get();
+        result.setUser(user);
+        autoRepository.save(result);
+        return autoId;
     }
 
     @Override

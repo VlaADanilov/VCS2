@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.controller.advice;
 
+import com.technokratos.vcs2.exception.notFound.BrandNotFoundException;
 import com.technokratos.vcs2.exception.registration.RegistrationException;
 import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
@@ -40,6 +41,15 @@ public class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessage onRegistrationException(
             RegistrationException ex
+    ) {
+        return new ExceptionMessage(ex.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(BrandNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionMessage BrandNotFoundException(
+            BrandNotFoundException ex
     ) {
         return new ExceptionMessage(ex.getMessage());
     }

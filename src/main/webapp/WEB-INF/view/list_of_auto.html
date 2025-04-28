@@ -27,7 +27,7 @@
                             <span th:text="*{autoInfo.price}"></span>
                             <b> Пробег: </b>
                             <span th:text="*{autoInfo.mileage}"></span>
-                            <button class="buttonw" type="button" th:attr="onclick='window.location.href = \'' + @{/auto/{id}(id=*{id})} + '\''">Подробнее</button>
+                            <button class="buttonw" type="button" th:onclick="|window.location.href='@{/auto/{id}(id=*{id}, referer=${myPath})}'|">Подробнее</button>
                         </p>
                         <span class = "nameOfCity" th:text="*{autoInfo.city}">${car.getCity()}</span>
                     </li>

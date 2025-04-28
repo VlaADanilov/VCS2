@@ -5,16 +5,16 @@
     <meta charset="utf-8">
     <title>Вход в систему</title>
     <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
-    <link rel="stylesheet" th:href="@{/resources/css/security.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/form.css}">
 </head>
 <body>
 <div id="wrapper">
     <div th:replace="~{header :: header}"></div>
     <div align="center">
-        <form id="registrationForm" method="POST" th:action="@{/login}" th:object="${loginForm}">
+        <form id="myForm" method="POST" th:action="@{/login}" th:object="${loginForm}">
             <h2>Вход в систему</h2>
             <!-- Сообщение об ошибке -->
-            <div th:if="${loginError}" id = "loginError">
+            <div th:if="${loginError}" id = "myError">
                 Вы ввели неправильный логин или пароль
             </div>
             <div>
@@ -25,7 +25,7 @@
                 <label for="password">Password: </label>
                 <input type="password" id="password" th:field="*{password}" />
                 <br/>
-                <button id = registrationButton type="submit">Войти</button>
+                <button id = myButton type="submit">Войти</button>
             </div>
         </form>
     </div>

@@ -20,6 +20,7 @@
         <div th:if="${user != null}">
             Здравствуйте, <span th:text="${user.username}"></span>!
             <a th:href="@{/logout}" onclick="confirmLogout(event)">Выйти</a>
+            <p><img class="marcer" th:src="@{/resources/pages/icon_green_checkbox.png}" width="10" height="10"><a th:href="@{/auto/add}">Добавить автомобиль</a></p>
         </div>
 
         <div th:if="${user == null}">

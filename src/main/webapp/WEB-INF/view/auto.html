@@ -9,7 +9,7 @@
 <body>
     <div id="wrapper">
         <div id = "header" align="center">
-            <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/auto}'|">
+            <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{${backUrl}}'|">
             <h1>Объявление</h1>
         </div>
         <div id = "content">

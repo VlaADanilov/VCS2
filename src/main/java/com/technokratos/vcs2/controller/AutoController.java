@@ -1,15 +1,16 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
+import com.technokratos.vcs2.model.entity.Auto;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.BrandService;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -27,15 +28,35 @@ public class AutoController {
             @RequestParam(defaultValue = "10") int size,
             Model model) {
         model.addAttribute("list",autoService.getAllAutos(page, size));
+        model.addAttribute("myPath","/auto");
         return "list_of_auto";
     }
 
     @GetMapping("/{car_id}")
-    public String getAuto(@PathVariable("car_id") UUID carId, Model model) {
+    public String getAuto(@PathVariable("car_id") UUID carId,
+                          Model model,
+                          @RequestParam(required = false, defaultValue = "/auto") String referer) {
+        model.addAttribute("backUrl",referer);
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("brand", brandService.getBrandByAutoId(carId));
         model.addAttribute("user", userService.findUserByCarId(carId));
         //TODO images
         return "auto";
+    }
+
+    @GetMapping("/add")
+    @PreAuthorize("isAuthenticated()")
+    public String addAuto(Model model) {
+        model.addAttribute("brands", brandService.getBrands());
+
+        return "add_auto_form";
+    }
+
+    @PostMapping
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public UUID addAuto(@RequestBody AutoRequestDto auto) {
+        return autoService.addAuto(auto);
     }
 }

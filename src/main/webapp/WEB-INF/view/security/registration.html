@@ -3,14 +3,14 @@
     <meta charset="utf-8">
     <title>Регистрация</title>
     <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
-    <link rel="stylesheet" th:href="@{/resources/css/security.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/form.css}">
 </head>
 
 <body>
 <div id="wrapper">
     <div th:replace="~{header :: header}"></div>
     <div align="center">
-        <form id="registrationForm"  method="post" th:action="@{/registration}" th:object="${regDto}"
+        <form id="myForm"  method="post" th:action="@{/registration}" th:object="${regDto}"
               th:data-url="@{/registration}" th:data-redirect="@{/}">
             <label for="username">Username: </label>
             <input type="text" id="username" th:field="*{username}" required>
@@ -28,7 +28,7 @@
             <input type="password" id="confirm" required>
             <br/>
 
-            <button type="submit" id="registrationButton">Register!</button>
+            <button type="submit" id="myButton">Register!</button>
         </form>
     </div>
 
