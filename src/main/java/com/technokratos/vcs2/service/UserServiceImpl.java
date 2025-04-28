@@ -40,6 +40,6 @@ public class UserServiceImpl {
     public User findUserByCarId(UUID car_id) {
         return userRepository.findByAuto(car_id).orElseThrow(
                 () ->
-                        new NotFoundException("User not found in car with id %s".formatted(car_id)));
+                        new NotFoundException("User not found in car with id %s".formatted(car_id), "/"));
     }
 }

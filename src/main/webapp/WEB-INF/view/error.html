@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+    <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
+</head>
+<body>
+<div id="wrapper">
+    <div th:replace="~{header :: header}"></div>
+
+    <div align="center">
+        <img th:src="@{/resources/icons/not-found.svg}" alt="Not found page" width="200" height="200">
+        <p th:text="${message}" style="color: red">Error text</p>
+        <a th:href="@{${back}}">Back</a>
+    </div>
+
+    <div th:replace="~{footer :: footer}"></div>
+</div>
+</body>
+</html>
