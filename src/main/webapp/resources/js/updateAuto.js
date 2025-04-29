@@ -4,6 +4,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         const url = $(this).data('url');
+        const method = $(this).data('method');
         const formData = {
             brand_id: $('#brand_id').val(),
             model: $('#model').val(),
@@ -16,13 +17,18 @@ $(document).ready(function () {
 
         $.ajax({
             url: url,
-            type: 'PUT',
+            type: method,
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response, status, xhr) {
                 $('#errors').empty();
                 if (xhr.status === 200) {
                     window.location.href = url;
+                } else {
+                    if (xhr.status === 201) {
+                        const id = xhr.responseText.replace(/^"|"$/g, '');
+                        window.location.href = url + id;
+                    }
                 }
             },
             error: function (xhr, status, error) {

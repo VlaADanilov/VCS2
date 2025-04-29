@@ -72,3 +72,10 @@
 .myImage2:hover{
     opacity: 1;
 }
+
+.status{
+    position: absolute;
+    left: 11px;
+    top: 3px;
+    font-size: 12px;
+}

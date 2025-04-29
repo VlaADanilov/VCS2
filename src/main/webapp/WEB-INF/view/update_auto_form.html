@@ -11,8 +11,11 @@
     <div th:replace="~{header :: header}"></div>
 
     <div align="center">
-        <form id="myForm" th:action="@{/auto}" method="post" th:data-url="@{/auto/{id}(id=${autoId})}">
-            <h2>Изменение объявления</h2>
+        <form id="myForm" th:action="@{/auto}" method="post"
+              th:data-url="@{/auto/{id}(id=${autoId})}"
+              th:data-method="${method}">
+            <h2 th:if="${method.equals('PUT')}">Изменение объявления</h2>
+            <h2 th:if="${method.equals('POST')}">Добавить объявление</h2>
             <label for="brand_id">Brand:</label>
             <select id="brand_id" name="brand_id" required>
                 <option value="" disabled selected>Выберите бренд</option>

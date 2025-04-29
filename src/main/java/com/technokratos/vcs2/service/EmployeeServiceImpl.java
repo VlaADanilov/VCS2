@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
-    private final UserRepository userRepository;
+    private final UserServiceImpl userService;
 
     @Override
     public List<EmployeeResponseDto> getAllEmployees() {
@@ -40,28 +40,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeRepository
                 .findById(empId)
                 .orElseThrow(() -> new EmployeeNotFoundException(empId));
-        employee.getAccount().setRole(Role.ROLE_DEFAULT.toString());
-        userRepository.save(employee.getAccount());
+        userService.doDefault(employee.getAccount().getId());
         employeeRepository.delete(employee);
     }
 
     @Override
     public void add(EmployeeRequestDto employee) {
-        Optional<User> byUsername = userRepository.findByUsername(employee.getAccountName());
-        if (byUsername.isPresent()) {
-            Employee empl = Employee.builder()
-                    .id(UUID.randomUUID())
-                    .phone(employee.getPhone())
-                    .name(employee.getName())
-                    .description(employee.getDescription())
-                    .profession(employee.getProfession())
-                    .account(byUsername.get())
-                    .build();
-            employeeRepository.save(empl);
-            byUsername.get().setRole(Role.ROLE_MODERATOR.toString());
-            userRepository.save(byUsername.get());
-        } else {
-            throw new UserNotFoundException(employee.getAccountName());
-        }
+        User byUsername = userService.findByUsername(employee.getAccountName());
+        Employee empl = Employee.builder()
+                .id(UUID.randomUUID())
+                .phone(employee.getPhone())
+                .name(employee.getName())
+                .description(employee.getDescription())
+                .profession(employee.getProfession())
+                .account(byUsername)
+                .build();
+        employeeRepository.save(empl);
+        userService.doModerator(byUsername.getId());
     }
 }

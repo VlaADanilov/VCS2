@@ -2,6 +2,7 @@ package com.technokratos.vcs2.controller;
 
 import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
+import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.BrandService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,6 +35,7 @@ public class AutoController {
             Model model) {
         model.addAttribute("list",autoService.getAllAutos(page, size));
         model.addAttribute("myPath","/auto");
+        model.addAttribute("back","/");
         return "list_of_auto";
     }
 
@@ -59,6 +62,9 @@ public class AutoController {
         if (correctReferers.contains(referer)) {
             return referer;
         }
+        if (referer.startsWith("/user/")) {
+            return referer + "/auto";
+        }
         return "/auto";
     }
 
@@ -66,8 +72,16 @@ public class AutoController {
     @PreAuthorize("isAuthenticated()")
     public String addAutoForm(Model model) {
         model.addAttribute("brands", brandService.getBrands());
-
-        return "add_auto_form";
+        model.addAttribute("auto", new AutoResponseDto("",
+                LocalDate.now().getYear(),
+                0,
+                0,
+                "",
+                "",
+                "",
+                UUID.randomUUID()));
+        model.addAttribute("method", "POST");
+        return "update_auto_form";
     }
 
     @PostMapping
@@ -94,7 +108,8 @@ public class AutoController {
         model.addAttribute("brands", brandService.getBrands());
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("autoId", carId.toString());
-        return "update_auto_form.html";
+        model.addAttribute("method", "PUT");
+        return "update_auto_form";
     }
 
     @PutMapping("/{car_id}")
@@ -116,6 +131,7 @@ public class AutoController {
                 page,
                 size));
         model.addAttribute("myPath","/auto/myCars");
+        model.addAttribute("back", "/");
         return "list_of_auto";
     }
 

@@ -7,13 +7,12 @@ function handleDelete(id) {
     const isConfirmed = confirm("Вы уверены, что хотите удалить этого сотрудника и лишить его всех прав?");
     if (isConfirmed) {
         const url = del.getAttribute("data-url");
-        alert(`Сотрудник успешно удален и лишён всех прав!`);
         $.ajax({
             url: url + "/" + id,
             type: 'DELETE',
             success: function (response, status, xhr) {
                 if (xhr.status === 200) {
-                    const id = xhr.responseText.replace(/^"|"$/g, '');
+                    alert(`Сотрудник успешно удален и лишён всех прав!`);
                     window.location.href = url;
                 }
             },

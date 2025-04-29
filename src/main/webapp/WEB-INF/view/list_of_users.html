@@ -1,0 +1,50 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список пользователей</title>
+    <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/list.css}">
+    <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
+</head>
+<body>
+<div id = "wrapper">
+    <div id = "header" align="center">
+        <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/}'|">
+        <h1>Пользователи</h1>
+    </div>
+
+    <div>
+        <ul class = "list1a">
+        </ul>
+        <ul class = "list1a">
+            <li th:each="user : ${list}" th:object="${user}">
+                <p class = "status" th:text="*{role}">
+
+                </p>
+                <p>
+                    <b>Name: </b>
+                    <span th:text="*{username}">username</span>
+                    <button type="button" th:onclick="|window.location.href='@{/user/{id}/auto(id=*{id})}'|">His cars</button>
+                    <div th:if="${can == true}">
+                        <button type="button" th:if="*{role.equals('ROLE_MODERATOR')}"
+                                th:attr="onclick='doDefault(\'' + *{id} + '\')'">
+                            Do default</button>
+                        <button type="button" th:if="*{role.equals('ROLE_DEFAULT')}"
+                                th:attr="onclick='doModerator(\'' + *{id} + '\')'">
+                            Do moderator</button>
+                    </div>
+                </p>
+
+            </li>
+        </ul>
+
+    </div>
+
+    <div th:replace="~{footer :: footer}"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script th:src="@{/resources/js/changeRole.js}"></script>
+</body>
+</html>
