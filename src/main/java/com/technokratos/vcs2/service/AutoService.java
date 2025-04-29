@@ -25,4 +25,6 @@ public interface AutoService {
     void deleteAuto(UUID id);
 
     boolean isOwner(UUID autoId, String username);
+
+    List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size);
 }

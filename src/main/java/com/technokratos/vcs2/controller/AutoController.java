@@ -2,7 +2,6 @@ package com.technokratos.vcs2.controller;
 
 import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
-import com.technokratos.vcs2.model.entity.Auto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.BrandService;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,7 +40,7 @@ public class AutoController {
     public String getAuto(@PathVariable("car_id") UUID carId,
                           Model model,
                           @RequestParam(required = false, defaultValue = "/auto") String referer) {
-        model.addAttribute("backUrl",referer);
+        model.addAttribute("backUrl",correctReferer(referer));
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("brand", brandService.getBrandByAutoId(carId));
         model.addAttribute("user", userService.findUserByCarId(carId));
@@ -48,6 +48,18 @@ public class AutoController {
         model.addAttribute("autoId", carId.toString());
         //TODO images
         return "auto";
+    }
+
+    private static final List<String> correctReferers = List.of(
+            "/auto",
+            "/auto/myCars"
+    );
+
+    private String correctReferer(String referer) {
+        if (correctReferers.contains(referer)) {
+            return referer;
+        }
+        return "/auto";
     }
 
     @GetMapping("/add")
@@ -92,6 +104,19 @@ public class AutoController {
             "or hasAnyRole('ADMIN', 'MODERATOR')")
     public void updateAuto(@PathVariable("car_id") UUID carId, @RequestBody AutoRequestDto auto) {
         autoService.updateAuto(auto, carId);
+    }
+
+    @GetMapping("/myCars")
+    @PreAuthorize("isAuthenticated()")
+    public String getMyAutoList(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size,
+                                Model model) {
+        model.addAttribute("list",autoService.getAllAutoFromUser(
+                UserReturner.getCurrentUser().get().getId(),
+                page,
+                size));
+        model.addAttribute("myPath","/auto/myCars");
+        return "list_of_auto";
     }
 
     private boolean showIcons(UUID autoId) {

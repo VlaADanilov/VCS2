@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .disable()
                 .authorizeRequests()
                     .antMatchers("/registration").not().fullyAuthenticated()
-                    .antMatchers("/", "/resources/**","/auto","/auto/{car_id}").permitAll()
+                    .antMatchers("/", "/resources/**","/auto","/auto/{car_id}", "/employee").permitAll()
                 .anyRequest().authenticated()
                 .and()
                     .formLogin()

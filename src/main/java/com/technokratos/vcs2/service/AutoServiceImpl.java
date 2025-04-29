@@ -9,6 +9,7 @@ import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.AutoRepository;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -44,25 +45,7 @@ public class AutoServiceImpl implements AutoService {
     @Override
     public List<ListElementAutoResponseDto> getAllAutos(int page, int size) {
         List<Auto> all = autoRepository.findAll(PageRequest.of(page, size)).get().toList();
-        List<ListElementAutoResponseDto> list = all.stream().map(auto -> {
-            ListElementAutoResponseDto elem = new ListElementAutoResponseDto(
-                    auto.getId(),
-                    auto.getUser().getUsername(),
-                    new AutoResponseDto(
-                            auto.getModel(),
-                            auto.getYear(),
-                            auto.getPrice(),
-                            auto.getMileage(),
-                            auto.getCity(),
-                            auto.getDescription(),
-                            auto.getPhone(),
-                            auto.getBrand().getId()
-                    ),
-                    auto.getBrand().getName()
-            );
-            return elem;
-        }).toList();
-        return list;
+        return getListElementAutoResponseDtos(all);
     }
 
     @Override
@@ -117,6 +100,35 @@ public class AutoServiceImpl implements AutoService {
     public void deleteAuto(UUID id) {
         checkForExistsAuto(id);
         autoRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size) {
+        Page<Auto> list = autoRepository.getPageableAutoFromUser(userId, PageRequest.of(page,size));
+        List<Auto> all = list.toList();
+        return getListElementAutoResponseDtos(all);
+    }
+
+    private List<ListElementAutoResponseDto> getListElementAutoResponseDtos(List<Auto> all) {
+        List<ListElementAutoResponseDto> rez = all.stream().map(auto -> {
+            ListElementAutoResponseDto elem = new ListElementAutoResponseDto(
+                    auto.getId(),
+                    auto.getUser().getUsername(),
+                    new AutoResponseDto(
+                            auto.getModel(),
+                            auto.getYear(),
+                            auto.getPrice(),
+                            auto.getMileage(),
+                            auto.getCity(),
+                            auto.getDescription(),
+                            auto.getPhone(),
+                            auto.getBrand().getId()
+                    ),
+                    auto.getBrand().getName()
+            );
+            return elem;
+        }).toList();
+        return rez;
     }
 
     public boolean isOwner(UUID autoId, String username) {

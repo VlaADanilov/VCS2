@@ -44,3 +44,31 @@
     bottom: 3px;
     font-size: 12px;
 }
+
+#right{
+    display: inline-block;
+    width: 50%;
+    height: auto;
+}
+#left{
+    vertical-align: top;
+    width: 30%;
+    height: auto;
+    display: inline-block;
+}
+.listImage{
+    height: 200px;
+    width: auto;
+    max-width: 200px;
+}
+
+.myImage2{
+    opacity: 0.6;
+    float: right;
+    width: 25px;
+    height: 25px;
+    margin: 0 0 0 0;
+}
+.myImage2:hover{
+    opacity: 1;
+}

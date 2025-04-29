@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Список автомобилей</title>
+        <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+        <link rel="stylesheet" th:href="@{/resources/css/list.css}">
+        <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
+    </head>
+    <body>
+        <div id = "wrapper">
+            <div id = "header" align="center">
+                <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/}'|">
+                <h1>Наши сотрудники</h1>
+            </div>
+
+            <div>
+                <ul class = "list1a">
+                    <li th:each="emp : ${list}" th:object="${emp}">
+                        <div id = "left" align="center">
+                            <img class = "listImage" src="${pageContext.servletContext.contextPath}/getImageEmp?emp_id=${emp.getId()}">
+                        </div>
+                        <div id = "right">
+                            <p><strong>ФИО</strong>:
+                                <span th:text="*{name}"></span></p>
+                            <p><strong>Профессия</strong>:
+                                <span th:text="*{profession}"></span></p>
+                            <p> <strong>Описание</strong>:
+                                <span th:text="*{description}"></span></p>
+                            <p> <strong>Имя пользователя</strong>:
+                                <span th:text="*{username}"></span></p>
+                            <p> <strong>Номер телефона</strong>:
+                                <span th:text="*{phone}"></span></p>
+                        </div>
+                        <img
+                                th:if="${can == true}"
+                                alt="delete icon"
+                                id = "del"
+                                class="myImage2"
+                                th:src="@{/resources/icons/delete-1487-svgrepo-com.svg}"
+                                th:attr="onclick='handleDelete(\'' + *{id} + '\')'">
+                    </li>
+                </ul>
+
+            </div>
+
+            <div th:replace="~{footer :: footer}"></div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script th:src="@{/resources/js/employee.js}"></script>
+    </body>
+</html>
