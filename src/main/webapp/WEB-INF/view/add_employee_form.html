@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Добавление автомобиля</title>
+    <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/form.css}">
+</head>
+<body>
+    <div id="wrapper">
+        <div th:replace="~{header :: header}"></div>
+
+        <div align="center">
+            <form id="myForm" th:action="@{/auto}" method="post" th:data-url="@{/employee}">
+                <h2>Добавление сотрудника</h2>
+
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required /><br />
+
+                <label for="profession">Profession:</label>
+                <input type="text" id="profession" name="profession" required /><br />
+
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" required pattern="^(\+7|8)+([0-9]){10}$"/><br />
+
+                <label for="accountName">AccountName:</label>
+                <input type="text" id="accountName" name="accountName" required /><br />
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description"></textarea><br />
+
+                <button type="submit" id="myButton">Confirm</button>
+            </form>
+
+            <div id="errors" align="center" class="errorMessages"></div>
+
+            <p>
+                <a th:href="@{/employee}">Назад</a>
+            </p>
+        </div>
+
+        <div th:replace="~{footer :: footer}"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script th:src="@{/resources/js/addEmployee.js}"></script>
+</body>
+</html>

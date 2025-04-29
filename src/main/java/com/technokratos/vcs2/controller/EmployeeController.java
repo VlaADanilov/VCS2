@@ -37,11 +37,16 @@ public class EmployeeController {
         employeeService.delete(emp_id);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public void addEmployee(@RequestBody EmployeeRequestDto employee) {
         employeeService.add(employee);
+    }
+
+    @GetMapping("/add")
+    public String getAddEmployeeForm() {
+        return "add_employee_form";
     }
 
     private boolean canCRUD() {
