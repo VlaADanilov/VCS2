@@ -1,6 +1,8 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.model.dto.request.EmployeeRequestDto;
 import com.technokratos.vcs2.model.dto.response.EmployeeResponseDto;
+import com.technokratos.vcs2.model.entity.Employee;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.EmployeeService;
 import com.technokratos.vcs2.service.UserServiceImpl;
@@ -33,6 +35,13 @@ public class EmployeeController {
     @ResponseBody
     public void deleteEmployee(@PathVariable("emp_id") UUID emp_id) {
         employeeService.delete(emp_id);
+    }
+
+    @PostMapping("/add")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addEmployee(@RequestBody EmployeeRequestDto employee) {
+        employeeService.add(employee);
     }
 
     private boolean canCRUD() {

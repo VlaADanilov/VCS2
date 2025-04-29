@@ -11,6 +11,14 @@
             <div id = "header" align="center">
                 <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/}'|">
                 <h1>Наши сотрудники</h1>
+                <img
+                        th:if="${can == true}"
+                        alt="add icon"
+                        id = "add"
+                        class="myImage2"
+                        th:src="@{/resources/icons/plus-svgrepo-com.svg}"
+                        th:attr="onclick='handleDelete(\'' + *{id} + '\')'"
+                        th:data-url="@{/employee}">
             </div>
 
             <div>

@@ -3,6 +3,7 @@ package com.technokratos.vcs2.controller.advice;
 import com.technokratos.vcs2.exception.notFound.BrandNotFoundException;
 import com.technokratos.vcs2.exception.notFound.NotFoundException;
 import com.technokratos.vcs2.exception.registration.RegistrationException;
+import com.technokratos.vcs2.exception.registration.UsernameExistsException;
 import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
 import com.technokratos.vcs2.model.dto.response.Violation;
@@ -39,10 +40,10 @@ public class ErrorHandlingControllerAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(RegistrationException.class)
+    @ExceptionHandler({RegistrationException.class, UsernameExistsException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessage onRegistrationException(
-            RegistrationException ex
+            Exception ex
     ) {
         return new ExceptionMessage(ex.getMessage());
     }

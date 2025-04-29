@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.service;
 
+import com.technokratos.vcs2.model.dto.request.EmployeeRequestDto;
 import com.technokratos.vcs2.model.dto.response.EmployeeResponseDto;
 
 import java.util.List;
@@ -10,4 +11,6 @@ public interface EmployeeService {
     List<EmployeeResponseDto> getAllEmployees();
 
     void delete(UUID empId);
+
+    void add(EmployeeRequestDto employee);
 }
