@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.config;
 
+import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.repository.UserRepository;
 import com.technokratos.vcs2.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/registration").not().fullyAuthenticated()
                     .antMatchers("/", "/resources/**","/auto","/auto/{car_id}", "/employee").permitAll()
+                    .antMatchers("/employee/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                     .formLogin()

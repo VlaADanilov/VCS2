@@ -15,7 +15,7 @@
 
             <div>
                 <ul class = "list1a">
-                    <li th:each="emp : ${list}" th:object="${emp}">
+                    <li th:each="emp : ${list}" th:object="${emp}" >
                         <div id = "left" align="center">
                             <img class = "listImage" src="${pageContext.servletContext.contextPath}/getImageEmp?emp_id=${emp.getId()}">
                         </div>
@@ -37,7 +37,8 @@
                                 id = "del"
                                 class="myImage2"
                                 th:src="@{/resources/icons/delete-1487-svgrepo-com.svg}"
-                                th:attr="onclick='handleDelete(\'' + *{id} + '\')'">
+                                th:attr="onclick='handleDelete(\'' + *{id} + '\')'"
+                                th:data-url="@{/employee}">
                     </li>
                 </ul>
 

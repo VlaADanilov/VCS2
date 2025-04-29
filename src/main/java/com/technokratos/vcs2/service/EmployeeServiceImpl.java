@@ -5,6 +5,7 @@ import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.response.EmployeeResponseDto;
 import com.technokratos.vcs2.model.entity.Employee;
 import com.technokratos.vcs2.repository.EmployeeRepository;
+import com.technokratos.vcs2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<EmployeeResponseDto> getAllEmployees() {
@@ -35,6 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .findById(empId)
                 .orElseThrow(() -> new EmployeeNotFoundException(empId));
         employee.getAccount().setRole(Role.ROLE_DEFAULT.toString());
+        userRepository.save(employee.getAccount());
         employeeRepository.delete(employee);
     }
 }
