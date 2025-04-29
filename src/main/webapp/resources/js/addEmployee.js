@@ -29,7 +29,7 @@ $(document).ready(function () {
                     const response = JSON.parse(xhr.responseText);
 
                     if (xhr.status === 404) {
-                        $('#errors').html("Ой, ой, ой, какие-то неполадки на сервере, попробуйте позже");
+                        $('#errors').html(response.message);
                     } else if (xhr.status === 400) {
                         if (response.violations && Array.isArray(response.violations)) {
                             const errorMessages = response.violations.map(violation =>

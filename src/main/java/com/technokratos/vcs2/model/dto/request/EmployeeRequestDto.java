@@ -12,10 +12,12 @@ import javax.validation.constraints.Size;
 public class EmployeeRequestDto {
 
     @NotBlank
-    @Size(min = 4)
+    @Size(min = 4,
+            message = "Должно быть длиной больше 3")
     private String name;
     @NotBlank
-    @Size(min = 4)
+    @Size(min = 4,
+            message = "Должно быть длиной больше 3")
     private String profession;
 
     private String description;

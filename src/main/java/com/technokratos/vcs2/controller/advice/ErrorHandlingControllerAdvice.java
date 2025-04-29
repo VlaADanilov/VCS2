@@ -2,6 +2,7 @@ package com.technokratos.vcs2.controller.advice;
 
 import com.technokratos.vcs2.exception.notFound.BrandNotFoundException;
 import com.technokratos.vcs2.exception.notFound.NotFoundException;
+import com.technokratos.vcs2.exception.notFound.UserNotFoundException;
 import com.technokratos.vcs2.exception.registration.RegistrationException;
 import com.technokratos.vcs2.exception.registration.UsernameExistsException;
 import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
@@ -40,7 +41,7 @@ public class ErrorHandlingControllerAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler({RegistrationException.class, UsernameExistsException.class})
+    @ExceptionHandler(RegistrationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessage onRegistrationException(
             Exception ex
@@ -48,6 +49,14 @@ public class ErrorHandlingControllerAdvice {
         return new ExceptionMessage(ex.getMessage());
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ExceptionMessage onUserNotFoundException(
+            UserNotFoundException ex
+    ) {
+        return new ExceptionMessage(ex.getMessage());
+    }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
