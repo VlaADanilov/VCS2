@@ -40,7 +40,7 @@ public class ImageController {
     @PreAuthorize("@securityService.canDelete(#auto_id, authentication.name) " +
             "or hasAnyRole('ADMIN', 'MODERATOR')")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file
-    , @PathVariable("auto_id") UUID auto_id) {
+            , @PathVariable("auto_id") UUID auto_id) {
         autoService.checkForExistsAuto(auto_id);
         ResponseEntity<String> response = uploadImage(file);
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -52,6 +52,17 @@ public class ImageController {
         }
     }
 
+    @DeleteMapping("/auto/{auto_id}/delete/{image_id}")
+    @PreAuthorize("@securityService.canDelete(#auto_id, authentication.name) " +
+            "or hasAnyRole('ADMIN', 'MODERATOR')")
+    public ResponseEntity<String> deleteImageFromAuto(@PathVariable("auto_id") UUID auto_id,
+            @PathVariable("image_id") UUID image_id) {
+        autoService.checkForExistsAuto(auto_id);
+        imageService.checkForExistsImageAndAutoContainsIt(auto_id, image_id);
+        imageService.deleteImage(image_id, auto_id);
+
+        return ResponseEntity.ok().build();
+    }
 
     private ResponseEntity<String> uploadImage(MultipartFile file) {
         try {

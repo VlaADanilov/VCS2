@@ -30,6 +30,8 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const leftContent = document.getElementById('left-content');
                     const images = /*[[${auto.images}]]*/ [];
+                    const showIcons = /*[[${showIcons}]]*/ false;
+                    const autoId = /*[[${autoId}]]*/ '';
 
                     images.forEach((imageId, index) => {
                         const imgContainer = document.createElement('div');
@@ -41,6 +43,20 @@
                         img.className = 'carImage';
 
                         imgContainer.appendChild(img);
+
+                        // Добавляем кнопку удаления, если showIcons == true
+                        if (showIcons) {
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.textContent = 'Удалить';
+                            deleteBtn.className = 'delete-image-btn';
+                            deleteBtn.onclick = function() {
+                                if (confirm('Вы уверены, что хотите удалить это изображение?')) {
+                                    deleteImage(autoId, imageId);
+                                }
+                            };
+                            imgContainer.appendChild(deleteBtn);
+                        }
+
                         leftContent.appendChild(imgContainer);
 
                         if (index < images.length - 1) {
@@ -49,6 +65,20 @@
                             leftContent.appendChild(p);
                         }
                     });
+
+                    function deleteImage(autoId, imageId) {
+                        $.ajax({
+                            url: '/api/image/auto/' + autoId + '/delete/' + imageId,
+                            type: 'DELETE',
+                            success: function() {
+                                alert('Успешно');
+                                location.reload();
+                            },
+                            error: function(xhr) {
+                                alert('Ошибка удаления фотографии: ' + (xhr.responseText || 'Неизвестная ошибка'));
+                            }
+                        });
+                    }
                 });
                 /*]]>*/
             </script>
