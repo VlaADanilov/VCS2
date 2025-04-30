@@ -90,6 +90,8 @@ public class AutoServiceImpl implements AutoService {
                 .brand(brandService.getReferenceById(auto.getBrand_id()))
                 .user(UserReturner.getCurrentUser().get())
                 .build();
+        Auto auto1 = autoRepository.findById(id).orElseThrow(() -> new AutoNotFoundException(id));
+        result.setImages(auto1.getImages());
         autoRepository.save(result);
     }
 
