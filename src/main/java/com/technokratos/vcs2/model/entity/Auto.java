@@ -31,7 +31,7 @@ public class Auto {
 
 
     @OneToMany
-    private Set<AutoImage> images;
+    private Set<Image> images;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Brand brand;

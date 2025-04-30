@@ -26,6 +26,9 @@ public class Employee {
     private String phone;
 
     @OneToOne
+    private Image image;
+
+    @OneToOne
     private User account;
 
 }

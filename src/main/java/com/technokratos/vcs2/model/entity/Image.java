@@ -9,8 +9,8 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "auto_image")
-public class AutoImage {
+@Table(name = "image")
+public class Image {
 
     @Id
     private UUID id;

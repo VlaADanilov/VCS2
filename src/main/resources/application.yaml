@@ -20,3 +20,6 @@ server:
   error:
     whitelabel:
       enabled: false
+vcs:
+  imageresourcepath:
+    path: "/vcs"

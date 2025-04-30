@@ -27,4 +27,8 @@ public interface AutoService {
     boolean isOwner(UUID autoId, String username);
 
     List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size);
+
+    void checkForExistsAuto(UUID id);
+
+    void addImageToAuto(UUID autoId, UUID imageId);
 }

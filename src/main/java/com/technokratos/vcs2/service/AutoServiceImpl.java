@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.service;
 
+import com.technokratos.vcs2.exception.notFound.ImageNotFoundException;
 import com.technokratos.vcs2.exception.notFound.AutoNotFoundException;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
@@ -7,13 +8,13 @@ import com.technokratos.vcs2.model.dto.response.ListElementAutoResponseDto;
 import com.technokratos.vcs2.model.entity.Auto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.AutoRepository;
+import com.technokratos.vcs2.repository.ImageRepository;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class AutoServiceImpl implements AutoService {
     private final AutoRepository autoRepository;
     private final BrandService brandService;
+    private final ImageRepository imageRepository;
     @Override
     public UUID addAuto(AutoRequestDto auto) {
         UUID autoId = UUID.randomUUID();
@@ -66,7 +68,8 @@ public class AutoServiceImpl implements AutoService {
                     auto.getCity(),
                     auto.getDescription(),
                     auto.getPhone(),
-                    auto.getBrand().getId()
+                    auto.getBrand().getId(),
+                    auto.getImages().stream().map((a) -> a.getId()).toList()
             );
         } else {
             throw new AutoNotFoundException(id);
@@ -90,10 +93,17 @@ public class AutoServiceImpl implements AutoService {
         autoRepository.save(result);
     }
 
-    private void checkForExistsAuto(UUID id) {
+    public void checkForExistsAuto(UUID id) {
         if (!autoRepository.existsById(id)) {
             throw new AutoNotFoundException(id);
         }
+    }
+
+    @Override
+    public void addImageToAuto(UUID autoId, UUID imageId) {
+        Auto auto = autoRepository.findById(autoId).orElseThrow(() -> new AutoNotFoundException(autoId));
+        auto.getImages().add(imageRepository.getReferenceById(imageId));
+        autoRepository.save(auto);
     }
 
     @Override
@@ -122,7 +132,8 @@ public class AutoServiceImpl implements AutoService {
                             auto.getCity(),
                             auto.getDescription(),
                             auto.getPhone(),
-                            auto.getBrand().getId()
+                            auto.getBrand().getId(),
+                            auto.getImages().stream().map((a) -> a.getId()).toList()
                     ),
                     auto.getBrand().getName()
             );

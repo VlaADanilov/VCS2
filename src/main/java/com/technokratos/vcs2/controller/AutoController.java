@@ -79,7 +79,8 @@ public class AutoController {
                 "",
                 "",
                 "",
-                UUID.randomUUID()));
+                UUID.randomUUID(),
+                List.of()));
         model.addAttribute("method", "POST");
         return "update_auto_form";
     }

@@ -11,17 +11,47 @@
         <div id = "header" align="center">
             <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{${backUrl}}'|">
             <div th:if="${showIcons == true}">
-                <img alt = "Delete image" class="myImage2" id="delete_auto"
+                <img alt = "Delete car" class="myImage2" id="delete_auto"
                      th:src="@{/resources/icons/delete-1487-svgrepo-com.svg}"
                      th:data-url="@{/auto/{id}(id=${autoId})}" th:data-back-url="@{${backUrl}}">
-                <img alt = "Update image" class="myImage2" th:src="@{/resources/icons/settings-2-svgrepo-com.svg}"
+                <img alt = "Update car" class="myImage2" th:src="@{/resources/icons/settings-2-svgrepo-com.svg}"
                      th:onclick="|location.href='@{/auto/{id}/updateForm(id=${autoId})}'|">
+                <img alt = "Add image" class="myImage2" id="add_image" th:src="@{/resources/icons/upload-window-svgrepo-com.svg}"
+                     th:attr="onclick=|showUploadDialog('${autoId}')|"
+                    th:data-url="@{/api/image/upload/auto}">
             </div>
             <h1>Объявление</h1>
         </div>
         <div id = "content">
             <div id = "left-content">
             </div>
+            <script th:inline="javascript">
+                /*<![CDATA[*/
+                document.addEventListener('DOMContentLoaded', function() {
+                    const leftContent = document.getElementById('left-content');
+                    const images = /*[[${auto.images}]]*/ [];
+
+                    images.forEach((imageId, index) => {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'image-container';
+
+                        const img = document.createElement('img');
+                        img.src = '/api/image/' + imageId;
+                        img.alt = 'Car image';
+                        img.className = 'carImage';
+
+                        imgContainer.appendChild(img);
+                        leftContent.appendChild(imgContainer);
+
+                        if (index < images.length - 1) {
+                            const p = document.createElement('p');
+                            p.style.margin = '10px 0';
+                            leftContent.appendChild(p);
+                        }
+                    });
+                });
+                /*]]>*/
+            </script>
             <div id = "right-pannel" th:object="${auto}">
                 <div id = "right-content">
                     <p><strong>Марка: </strong> <span th:text="${brand.name}"></span></p>

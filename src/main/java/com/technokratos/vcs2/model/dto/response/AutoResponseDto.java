@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.model.dto.response;
 
+import java.util.List;
 import java.util.UUID;
 
 public record AutoResponseDto(String model,
@@ -9,5 +10,6 @@ public record AutoResponseDto(String model,
                               String city,
                               String description,
                               String phone,
-                              UUID brandId) {
+                              UUID brandId,
+                              List<UUID> images) {
 }
