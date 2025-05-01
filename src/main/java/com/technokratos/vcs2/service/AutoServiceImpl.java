@@ -2,6 +2,7 @@ package com.technokratos.vcs2.service;
 
 import com.technokratos.vcs2.exception.notFound.ImageNotFoundException;
 import com.technokratos.vcs2.exception.notFound.AutoNotFoundException;
+import com.technokratos.vcs2.mapper.AutoMapper;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
 import com.technokratos.vcs2.model.dto.response.ListElementAutoResponseDto;
@@ -28,19 +29,12 @@ public class AutoServiceImpl implements AutoService {
     private final BrandService brandService;
     private final ImageRepository imageRepository;
     private final ImageService imageService;
+    private final AutoMapper autoMapper;
     @Override
     public UUID addAuto(AutoRequestDto auto) {
         UUID autoId = UUID.randomUUID();
-        Auto result = Auto.builder()
-                .id(autoId)
-                .model(auto.getModel())
-                .city(auto.getCity())
-                .year(auto.getYear())
-                .price(auto.getPrice())
-                .mileage(auto.getMileage())
-                .description(auto.getDescription())
-                .brand(brandService.getReferenceById(auto.getBrand_id()))
-                .build();
+        Auto result = autoMapper.toAuto(auto);
+        result.setId(autoId);
         User user = UserReturner.getCurrentUser().get();
         result.setUser(user);
         autoRepository.save(result);
@@ -63,17 +57,7 @@ public class AutoServiceImpl implements AutoService {
         Optional<Auto> byId = autoRepository.findById(id);
         if (byId.isPresent()) {
             Auto auto = byId.get();
-            return new AutoResponseDto(
-                    auto.getModel(),
-                    auto.getYear(),
-                    auto.getPrice(),
-                    auto.getMileage(),
-                    auto.getCity(),
-                    auto.getDescription(),
-                    auto.getPhone(),
-                    auto.getBrand().getId(),
-                    auto.getImages().stream().map((a) -> a.getId()).toList()
-            );
+            return autoMapper.toAutoResponseDto(auto);
         } else {
             throw new AutoNotFoundException(id);
         }
@@ -82,17 +66,9 @@ public class AutoServiceImpl implements AutoService {
     @Override
     public void updateAuto(AutoRequestDto auto, UUID id) {
         checkForExistsAuto(id);
-        Auto result = Auto.builder()
-                .id(id)
-                .model(auto.getModel())
-                .year(auto.getYear())
-                .price(auto.getPrice())
-                .mileage(auto.getMileage())
-                .city(auto.getCity())
-                .description(auto.getDescription())
-                .brand(brandService.getReferenceById(auto.getBrand_id()))
-                .user(UserReturner.getCurrentUser().get())
-                .build();
+        Auto result = autoMapper.toAuto(auto);
+        result.setId(id);
+        result.setUser(UserReturner.getCurrentUser().get());
         Auto auto1 = autoRepository.findById(id).orElseThrow(() -> new AutoNotFoundException(id));
         result.setImages(auto1.getImages());
         autoRepository.save(result);
@@ -134,25 +110,7 @@ public class AutoServiceImpl implements AutoService {
     }
 
     private List<ListElementAutoResponseDto> getListElementAutoResponseDtos(List<Auto> all) {
-        List<ListElementAutoResponseDto> rez = all.stream().map(auto -> {
-            ListElementAutoResponseDto elem = new ListElementAutoResponseDto(
-                    auto.getId(),
-                    auto.getUser().getUsername(),
-                    new AutoResponseDto(
-                            auto.getModel(),
-                            auto.getYear(),
-                            auto.getPrice(),
-                            auto.getMileage(),
-                            auto.getCity(),
-                            auto.getDescription(),
-                            auto.getPhone(),
-                            auto.getBrand().getId(),
-                            auto.getImages().stream().map((a) -> a.getId()).toList()
-                    ),
-                    auto.getBrand().getName()
-            );
-            return elem;
-        }).toList();
+        List<ListElementAutoResponseDto> rez = all.stream().map(autoMapper::toListElementAutoResponseDto).toList();
         return rez;
     }
 

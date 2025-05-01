@@ -20,6 +20,16 @@
                      th:attr="onclick=|showUploadDialog('${autoId}')|"
                     th:data-url="@{/api/image/upload/auto}">
             </div>
+            <div th:if="${isAuthorize == true}" id = "heart_block" th:data-url="@{/like}">
+                <img alt = "Red heart" class="myImage2" id="delete_like"
+                    th:src = "@{/resources/icons/heart-red.svg}"
+                    th:if="${hasLike == true}"
+                     th:attr="onclick=|deleteLike('${autoId}')|">
+                <img alt = "Black heart" class="myImage2" id="add_like"
+                     th:src = "@{/resources/icons/heart-black.svg}"
+                     th:if="${hasLike == false}"
+                     th:attr="onclick=|addLike('${autoId}')|">
+            </div>
             <h1>Объявление</h1>
         </div>
         <div id = "content">

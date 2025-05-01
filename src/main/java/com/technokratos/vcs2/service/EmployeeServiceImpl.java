@@ -1,11 +1,11 @@
 package com.technokratos.vcs2.service;
 
+import com.technokratos.vcs2.exception.ImageExistInThisEmployeeException;
 import com.technokratos.vcs2.exception.notFound.EmployeeNotFoundException;
 import com.technokratos.vcs2.mapper.EmployeeMapper;
 import com.technokratos.vcs2.model.dto.request.EmployeeRequestDto;
 import com.technokratos.vcs2.model.dto.response.EmployeeResponseDto;
 import com.technokratos.vcs2.model.entity.Employee;
-import com.technokratos.vcs2.model.entity.Image;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.EmployeeRepository;
 import com.technokratos.vcs2.repository.ImageRepository;
@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void addImageToEmployee(UUID employeeId, UUID imageId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException(employeeId));
         if (employee.getImage() != null) {
-            throw new RuntimeException("Image already exists");
+            throw new ImageExistInThisEmployeeException();
         }
         employee.setImage(imageRepository.getReferenceById(imageId));
         employeeRepository.save(employee);

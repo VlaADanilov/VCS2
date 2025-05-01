@@ -111,3 +111,45 @@ function getCsrfToken() {
     const csrfMetaTag = document.querySelector('meta[name="_csrf"]');
     return csrfMetaTag ? csrfMetaTag.content : null;
 }
+
+function addLike(autoId) {
+    const heart = document.getElementById("heart_block");
+    const url = heart.getAttribute("data-url");
+    fetch(url + "/" + autoId, {
+        method: 'POST',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сервера, повторите попытку позже');
+            }
+            return response.text();
+        })
+        .then(data => {
+            alert('Добавлено в избранное!');
+            location.reload(true);
+        })
+        .catch(error => {
+            alert('Ошибка: ' + error.message);
+        });
+}
+
+function deleteLike(autoId) {
+    const heart = document.getElementById("heart_block");
+    const url = heart.getAttribute("data-url");
+    fetch(url + "/" + autoId, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сервера, повторите попытку позже');
+            }
+            return response.text();
+        })
+        .then(data => {
+            alert('Удалено из избранного!');
+            location.reload(true);
+        })
+        .catch(error => {
+            alert('Ошибка: ' + error.message);
+        });
+}

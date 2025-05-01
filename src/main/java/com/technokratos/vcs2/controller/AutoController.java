@@ -6,6 +6,7 @@ import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.BrandService;
+import com.technokratos.vcs2.service.LikeService;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class AutoController {
     private final AutoService autoService;
     private final BrandService brandService;
     private final UserServiceImpl userService;
+    private final LikeService likeService;
 
     @GetMapping
     public String getAllAutoPageable(
@@ -49,12 +51,20 @@ public class AutoController {
         model.addAttribute("user", userService.findUserByCarId(carId));
         model.addAttribute("showIcons",showIcons(carId));
         model.addAttribute("autoId", carId.toString());
+        boolean isAuthorize = false;
+        if (UserReturner.getCurrentUser().isPresent()) {
+            isAuthorize = true;
+            User user = UserReturner.getCurrentUser().get();
+            model.addAttribute("hasLike", likeService.existLike(user.getId(), carId));
+        }
+        model.addAttribute("isAuthorize", isAuthorize);
         return "auto";
     }
 
     private static final List<String> correctReferers = List.of(
             "/auto",
-            "/auto/myCars"
+            "/auto/myCars",
+            "/like"
     );
 
     private String correctReferer(String referer) {

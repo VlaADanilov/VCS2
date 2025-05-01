@@ -1,5 +1,8 @@
 package com.technokratos.vcs2.controller.advice;
 
+import com.technokratos.vcs2.exception.ImageExistInThisEmployeeException;
+import com.technokratos.vcs2.exception.LikeException;
+import com.technokratos.vcs2.exception.ServiceException;
 import com.technokratos.vcs2.exception.notFound.BrandNotFoundException;
 import com.technokratos.vcs2.exception.notFound.NotFoundException;
 import com.technokratos.vcs2.exception.notFound.UserNotFoundException;
@@ -9,6 +12,7 @@ import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
 import com.technokratos.vcs2.model.dto.response.Violation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,22 +45,16 @@ public class ErrorHandlingControllerAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(RegistrationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionMessage onRegistrationException(
-            Exception ex
+    @ExceptionHandler({RegistrationException.class,
+            UserNotFoundException.class,
+            ImageExistInThisEmployeeException.class,
+            LikeException.class})
+    public ResponseEntity<String> onRegistrationException(
+            ServiceException ex
     ) {
-        return new ExceptionMessage(ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(),ex.getStatus());
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ExceptionMessage onUserNotFoundException(
-            UserNotFoundException ex
-    ) {
-        return new ExceptionMessage(ex.getMessage());
-    }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
