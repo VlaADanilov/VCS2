@@ -7,7 +7,7 @@ public class ImageNotFoundException extends NotFoundException {
         super("image with id %s not found".formatted(imageId), "/");
     }
 
-    public ImageNotFoundException(UUID imageId, UUID autoId) {
-        super("image with id %s not found in this auto :%s".formatted(imageId, autoId), "/");
+    public ImageNotFoundException(UUID imageId, UUID autoId, String str) {
+        super("image with id %s not found in this %s :%s".formatted(imageId,str, autoId), "/");
     }
 }

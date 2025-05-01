@@ -6,6 +6,7 @@ import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
 import com.technokratos.vcs2.model.dto.response.ListElementAutoResponseDto;
 import com.technokratos.vcs2.model.entity.Auto;
+import com.technokratos.vcs2.model.entity.Image;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.AutoRepository;
 import com.technokratos.vcs2.repository.ImageRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +27,7 @@ public class AutoServiceImpl implements AutoService {
     private final AutoRepository autoRepository;
     private final BrandService brandService;
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
     @Override
     public UUID addAuto(AutoRequestDto auto) {
         UUID autoId = UUID.randomUUID();
@@ -110,7 +113,16 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public void deleteAuto(UUID id) {
-        checkForExistsAuto(id);
+        Auto auto = autoRepository.findById(id).orElseThrow(() -> new AutoNotFoundException(id));
+        List<Image> list = new ArrayList<>();
+        for (Image image : auto.getImages()) {
+            list.add(image);
+        }
+
+        for (Image image : list) {
+            imageService.deleteImage(image.getId(), id);
+        }
+
         autoRepository.deleteById(id);
     }
 

@@ -49,7 +49,6 @@ public class AutoController {
         model.addAttribute("user", userService.findUserByCarId(carId));
         model.addAttribute("showIcons",showIcons(carId));
         model.addAttribute("autoId", carId.toString());
-        //TODO images
         return "auto";
     }
 

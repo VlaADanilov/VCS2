@@ -8,6 +8,7 @@ public record EmployeeResponseDto(
         String profession,
         String description,
         String username,
-        String phone
+        String phone,
+        UUID image
 ) {
 }

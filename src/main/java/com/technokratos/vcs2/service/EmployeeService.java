@@ -16,4 +16,8 @@ public interface EmployeeService {
     void delete(UUID empId);
 
     void add(@Valid EmployeeRequestDto employee);
+
+    void checkForExistsEmployee(UUID employeeId);
+
+    void addImageToEmployee(UUID employeeId, UUID imageId);
 }

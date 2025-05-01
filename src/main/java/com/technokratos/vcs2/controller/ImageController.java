@@ -2,6 +2,7 @@ package com.technokratos.vcs2.controller;
 
 import com.technokratos.vcs2.model.entity.Image;
 import com.technokratos.vcs2.service.AutoService;
+import com.technokratos.vcs2.service.EmployeeService;
 import com.technokratos.vcs2.service.ImageService;
 import com.technokratos.vcs2.util.FileSystemProperty;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +30,9 @@ import java.util.UUID;
 public class ImageController {
     private final AutoService autoService;
     private final ImageService imageService;
-    private Path rootLocation = Paths.get("/vcs");
+    private final EmployeeService employeeService;
 
-    // Список разрешенных расширений
-    private final List<String> allowedExtensions = Arrays.asList(
-            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"
-    );
+    private final Path rootLocation = Paths.get("/vcs");
 
     @PostMapping("/upload/auto/{auto_id}")
     @PreAuthorize("@securityService.canDelete(#auto_id, authentication.name) " +
@@ -42,7 +40,7 @@ public class ImageController {
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file
             , @PathVariable("auto_id") UUID auto_id) {
         autoService.checkForExistsAuto(auto_id);
-        ResponseEntity<String> response = uploadImage(file);
+        ResponseEntity<String> response = imageService.uploadImage(file);
         if (response.getStatusCode().is2xxSuccessful()) {
             UUID image_id = imageService.saveImage(response.getBody());
             autoService.addImageToAuto(auto_id, image_id);
@@ -62,43 +60,6 @@ public class ImageController {
         imageService.deleteImage(image_id, auto_id);
 
         return ResponseEntity.ok().build();
-    }
-
-    private ResponseEntity<String> uploadImage(MultipartFile file) {
-        try {
-            if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("Файл пуст");
-            }
-
-            String originalFilename = file.getOriginalFilename();
-            String fileExtension = originalFilename != null ?
-                    originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase() : "";
-
-            if (!allowedExtensions.contains(fileExtension)) {
-                return ResponseEntity.badRequest().body(
-                        "Недопустимый тип файла. Разрешены: " + allowedExtensions
-                );
-            }
-
-            if (!Files.exists(rootLocation)) {
-                Files.createDirectories(rootLocation);
-            }
-
-            UUID uuid = UUID.randomUUID();
-            String newFilename = uuid + fileExtension;
-
-            Files.copy(
-                    file.getInputStream(),
-                    rootLocation.resolve(newFilename),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-
-            return ResponseEntity.ok(newFilename);
-
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError()
-                    .body("Ошибка при загрузке файла: " + e.getMessage());
-        }
     }
 
     @GetMapping("/{image_id}")
@@ -121,6 +82,32 @@ public class ImageController {
 
         } catch (MalformedURLException e) {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/employee/{employeeId}/delete/{imageId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> deleteEmployeeImage(@PathVariable("employeeId") UUID employeeId,
+                                                      @PathVariable("imageId") UUID imageId) {
+        employeeService.checkForExistsEmployee(employeeId);
+        imageService.checkForExistsImageAndEmployeeContainsIt(employeeId,imageId);
+        imageService.deleteImageFromEmployee(imageId, employeeId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/upload/employee/{employee_id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> uploadImageToEmployee(@RequestParam("file") MultipartFile file
+            , @PathVariable("employee_id") UUID employeeId) {
+        employeeService.checkForExistsEmployee(employeeId);
+        ResponseEntity<String> response = imageService.uploadImage(file);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            UUID image_id = imageService.saveImage(response.getBody());
+            employeeService.addImageToEmployee(employeeId, image_id);
+            return ResponseEntity.ok(image_id.toString());
+        } else {
+            return response;
         }
     }
 
