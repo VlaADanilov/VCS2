@@ -153,3 +153,62 @@ function deleteLike(autoId) {
             alert('Ошибка: ' + error.message);
         });
 }
+
+function addReport(autoId) {
+    const form = document.createElement('div');
+    form.innerHTML = `
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+            <h3>Оставить жалобу</h3>
+            <textarea id="reportText" rows="4" cols="40" placeholder="Введите текст жалобы..."></textarea><br>
+            <button id="sendReportBtn">Отправить жалобу</button>
+            <button id="closeReportBtn">Закрыть</button>
+        </div>
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;"></div>
+    `;
+
+    document.body.appendChild(form);
+
+    document.getElementById('closeReportBtn').addEventListener('click', () => {
+        document.body.removeChild(form);
+    });
+
+
+    document.getElementById('sendReportBtn').addEventListener('click', () => {
+        const text = document.getElementById('reportText').value.trim();
+        if (!text) {
+            alert("Пожалуйста, введите текст жалобы.");
+            return;
+        }
+        const report_icon = document.getElementById("report_icon");
+        const url = report_icon.getAttribute("data-url");
+        const formData = {
+            comment: text
+        };
+        // Отправка AJAX-запроса
+        $.ajax({
+            url: url + '/' + autoId, // замените на реальный URL
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert("Жалоба успешно отправлена!");
+                document.body.removeChild(form);
+            },
+            error: function(xhr, status, error) {
+                alert("Ошибка при отправке жалобы.");
+                if (xhr.status === 400) {
+                    if (response.violations && Array.isArray(response.violations)) {
+                        const errorMessages = response.violations.map(violation =>
+                            `${violation.fieldName.charAt(0).toUpperCase() + violation.fieldName.slice(1)}: ${violation.message}`
+                        ).join('<br>');
+
+                        alert(errorMessages)
+                    }
+                }
+                else {
+                    $('#errors').html("Неизвестная ошибка. Пожалуйста, обратитесь к администратору.");
+                }
+            }
+        });
+    });
+}

@@ -4,6 +4,7 @@ import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -18,8 +19,11 @@ public class Report {
     private String comment;
 
     @ManyToOne
-    private User user;
+    private User reporter;
 
     @ManyToOne
     private Auto auto;
+
+    @ManyToMany
+    private Set<User> viewed;
 }

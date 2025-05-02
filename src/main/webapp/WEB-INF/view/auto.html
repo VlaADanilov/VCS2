@@ -29,6 +29,9 @@
                      th:src = "@{/resources/icons/heart-black.svg}"
                      th:if="${hasLike == false}"
                      th:attr="onclick=|addLike('${autoId}')|">
+                <img alt = "Report image" class="myImage2" id="report_icon" th:data-url="@{/report}"
+                     th:src = "@{/resources/icons/report.svg}"
+                     th:attr="onclick=|addReport('${autoId}')|">
             </div>
             <h1>Объявление</h1>
         </div>
