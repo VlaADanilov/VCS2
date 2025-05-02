@@ -31,4 +31,8 @@ public interface AutoService {
     void checkForExistsAuto(UUID id);
 
     void addImageToAuto(UUID autoId, UUID imageId);
+
+    Long getAllAutosPagesCount();
+
+    Long getAutoPagesCount(UUID userId);
 }

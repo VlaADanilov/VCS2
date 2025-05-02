@@ -32,12 +32,14 @@ public class AutoController {
 
     @GetMapping
     public String getAllAutoPageable(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
-        model.addAttribute("list",autoService.getAllAutos(page, size));
+        model.addAttribute("list",autoService.getAllAutos(page - 1, size));
         model.addAttribute("myPath","/auto");
         model.addAttribute("back","/");
+        model.addAttribute("pageCount", autoService.getAllAutosPagesCount());
+        model.addAttribute("currentPage", page);
         return "list_of_auto";
     }
 
@@ -134,15 +136,17 @@ public class AutoController {
 
     @GetMapping("/myCars")
     @PreAuthorize("isAuthenticated()")
-    public String getMyAutoList(@RequestParam(defaultValue = "0") int page,
+    public String getMyAutoList(@RequestParam(defaultValue = "1") int page,
                                 @RequestParam(defaultValue = "10") int size,
                                 Model model) {
         model.addAttribute("list",autoService.getAllAutoFromUser(
                 UserReturner.getCurrentUser().get().getId(),
-                page,
+                page - 1,
                 size));
         model.addAttribute("myPath","/auto/myCars");
         model.addAttribute("back", "/");
+        model.addAttribute("pageCount", autoService.getAutoPagesCount(UserReturner.getCurrentUser().get().getId()));
+        model.addAttribute("currentPage", page);
         return "list_of_auto";
     }
 

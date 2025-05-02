@@ -88,6 +88,12 @@ public class AutoServiceImpl implements AutoService {
     }
 
     @Override
+    public Long getAllAutosPagesCount() {
+        long count = autoRepository.count();
+        return count % 10 == 0 ? count / 10 : count / 10 + 1;
+    }
+
+    @Override
     public void deleteAuto(UUID id) {
         Auto auto = autoRepository.findById(id).orElseThrow(() -> new AutoNotFoundException(id));
         List<Image> list = new ArrayList<>();
@@ -118,5 +124,11 @@ public class AutoServiceImpl implements AutoService {
         return autoRepository.findById(autoId)
                 .map(auto -> auto.getUser().getUsername().equals(username))
                 .orElse(false);
+    }
+
+    @Override
+    public Long getAutoPagesCount(UUID userID) {
+        Long l = autoRepository.countOf(userID);
+        return l % 10 == 0 ? l / 10 : l / 10 + 1;
     }
 }
