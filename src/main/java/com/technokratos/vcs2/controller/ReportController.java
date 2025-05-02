@@ -28,23 +28,23 @@ public class ReportController {
     }
 
     @PostMapping("/addView/{reportId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MODERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     @ResponseStatus(HttpStatus.OK)
     public void addView(@PathVariable("reportId") UUID reportId) {
         reportService.addView(reportId, UserReturner.getCurrentUser().get().getId());
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MODERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public String listOfReports(Model model,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "10") int size) {
         model.addAttribute("list", reportService.getReports(page, size));
-        return "listOfReports";
+        return "list_of_reports";
     }
 
     @DeleteMapping("/{reportId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN, ROLE_MODERATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MODERATOR')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteReport(@PathVariable("reportId") UUID reportId) {
         reportService.deleteReport(reportId);

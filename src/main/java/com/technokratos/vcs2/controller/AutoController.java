@@ -64,7 +64,8 @@ public class AutoController {
     private static final List<String> correctReferers = List.of(
             "/auto",
             "/auto/myCars",
-            "/like"
+            "/like",
+            "/report"
     );
 
     private String correctReferer(String referer) {

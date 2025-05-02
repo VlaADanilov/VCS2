@@ -17,4 +17,6 @@ public interface ReportService {
     void addView(UUID reportId,UUID userId);
 
     void deleteReport(UUID reportId);
+
+    void deleteAllViewWhere(UUID id);
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,5 +57,11 @@ public class ReportServiceImpl implements ReportService {
             throw new ReportNotFoundException(reportId);
         }
         reportRepository.deleteById(reportId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllViewWhere(UUID id) {
+        reportRepository.deleteViewRelationsByUserIdNative(id);
     }
 }

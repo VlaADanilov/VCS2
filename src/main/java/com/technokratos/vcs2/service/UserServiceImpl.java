@@ -8,6 +8,7 @@ import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.RegisterUserDto;
 import com.technokratos.vcs2.model.dto.response.UserResponseDto;
 import com.technokratos.vcs2.model.entity.User;
+import com.technokratos.vcs2.repository.ReportRepository;
 import com.technokratos.vcs2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class UserServiceImpl {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReportService reportService;
 
     public UUID saveUser(@Valid RegisterUserDto regDto) {
         if (userRepository.findByUsername(regDto.getUsername()).isPresent()) {
@@ -75,6 +77,7 @@ public class UserServiceImpl {
             throw new UserNotFoundException(userId);
         } else {
             byId.get().setRole(Role.ROLE_DEFAULT.toString());
+            reportService.deleteAllViewWhere(byId.get().getId());
             userRepository.save(byId.get());
         }
     }

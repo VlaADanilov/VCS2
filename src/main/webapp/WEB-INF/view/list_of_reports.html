@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список автомобилей</title>
+    <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
+    <link rel="stylesheet" th:href="@{/resources/css/list.css}">
+    <link rel="icon" th:href="@{/resources/pages/ico.png}" type="image/png">
+</head>
+<body>
+<div id="wrapper">
+    <div id = "header" align="center">
+        <img class="myImage" th:src="@{/resources/icons/back.jpg}" th:onclick="|location.href='@{/}'|">
+        <h1>Список жалоб</h1>
+    </div>
+    <div>
+        <ul class = "list1a">
+            <li th:each="report : ${list}" th:object="${report}">
+                <p class="nameOfAuthor" th:text="*{reporter}"></p>
+                <p>
+                    <b>Текст: </b>
+                    <span th:text="*{comment}"></span>
+                    <button class="buttonw" type="button" id="goingButton"
+                            onclick="going()"
+                            th:data-url="@{/report}"
+                            th:data-going="@{/auto}"
+                            th:data-auto="*{autoId}"
+                            th:data-rep="*{uuid}"
+                    >Подробнее</button>
+                </p>
+                <div>
+                    <span th:each="name : *{viewedNames}" class="nameOfCity" th:text="${name} + ';  '"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div th:replace="~{footer :: footer}"></div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script th:src="@{/resources/js/report.js}"></script>
+</body>

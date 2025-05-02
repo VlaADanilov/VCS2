@@ -23,6 +23,9 @@
             <p><img class="marcer" th:src="@{/resources/pages/icon_green_checkbox.png}" width="10" height="10"><a th:href="@{/auto/add}">Добавить автомобиль</a></p>
             <p><img class="marcer" th:src="@{/resources/pages/icon_green_checkbox.png}" width="10" height="10"><a th:href="@{/auto/myCars}">Мои объявления</a></p>
             <p><img class="marcer" th:src="@{/resources/pages/icon_green_checkbox.png}" width="10" height="10"><a th:href="@{/like}">Избранное</a></p>
+            <p th:if ="${user.role == 'ROLE_ADMIN' || user.role == 'ROLE_MODERATOR'}">
+                <img class="marcer" th:src="@{/resources/pages/icon_green_checkbox.png}" width="10" height="10"><a th:href="@{/report}">Жалобы</a>
+            </p>
         </div>
 
         <div th:if="${user == null}">
