@@ -16,6 +16,12 @@
         <ul class = "list1a">
             <li th:each="report : ${list}" th:object="${report}">
                 <p class="nameOfAuthor" th:text="*{reporter}"></p>
+                <img    alt="delete icon"
+                        id = "del"
+                        class="myImage2"
+                        th:src="@{/resources/icons/delete-1487-svgrepo-com.svg}"
+                        th:attr="onclick='handleDelete(\'' + *{uuid} + '\')'"
+                        th:data-url="@{/report}">
                 <p>
                     <b>Текст: </b>
                     <span th:text="*{comment}"></span>
