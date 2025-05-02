@@ -40,6 +40,26 @@
 
     </div>
 
+    <div id="pagination">
+        <ul class="pagination">
+            <!-- Стрелка "Назад", если не первая страница -->
+            <li th:if="${currentPage > 1}">
+                <a th:href="@{/user(page=${currentPage - 1})}">«</a>
+            </li>
+
+            <!-- Пагинация по всем страницам -->
+            <li th:each="i : ${#numbers.sequence(1, pageCount)}"
+                th:class="${i == currentPage} ? 'active' : ''">
+                <a th:href="@{/user(page=${i})}" th:text="${i}"></a>
+            </li>
+
+            <!-- Стрелка "Вперёд", если не последняя страница -->
+            <li th:if="${currentPage < pageCount}">
+                <a th:href="@{/user(page=${currentPage + 1})}">»</a>
+            </li>
+        </ul>
+    </div>
+
     <div th:replace="~{footer :: footer}"></div>
 </div>
 

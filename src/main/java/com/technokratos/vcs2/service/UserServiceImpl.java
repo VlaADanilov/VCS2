@@ -85,4 +85,9 @@ public class UserServiceImpl {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
     }
+
+    public Long countOfAllUserPages() {
+        long r = userRepository.count();
+        return r % 10 == 0 ? r / 10 : r / 10 + 1;
+    }
 }

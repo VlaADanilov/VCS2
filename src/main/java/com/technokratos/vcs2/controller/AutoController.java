@@ -75,7 +75,7 @@ public class AutoController {
             return referer;
         }
         if (referer.startsWith("/user/")) {
-            return referer + "/auto";
+            return referer;
         }
         return "/auto";
     }

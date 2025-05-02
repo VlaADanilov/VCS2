@@ -25,22 +25,26 @@ public class UserController {
     private final AutoService autoService;
 
     @GetMapping
-    public String getAllUsers(@RequestParam(defaultValue = "0") int page,
+    public String getAllUsers(@RequestParam(defaultValue = "1") int page,
                               @RequestParam(defaultValue = "10") int size,
                               Model model) {
-        model.addAttribute("list", userService.getAllUsers(page, size));
+        model.addAttribute("list", userService.getAllUsers(page - 1, size));
         model.addAttribute("can", canChangeRole());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageCount", userService.countOfAllUserPages());
         return "list_of_users";
     }
 
     @GetMapping("/{user_id}/auto")
     public String getAllAutosFrom(@PathVariable("user_id") UUID user_id,
                                   Model model,
-                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "10") int size) {
-        model.addAttribute("list", autoService.getAllAutoFromUser(user_id, page, size));
-        model.addAttribute("myPath", "/user/" + user_id);
+        model.addAttribute("list", autoService.getAllAutoFromUser(user_id, page - 1, size));
+        model.addAttribute("myPath", "/user/" + user_id + "/auto");
         model.addAttribute("back", "/user");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageCount", autoService.getAutoPagesCount(user_id));
         return "list_of_auto";
     }
 
