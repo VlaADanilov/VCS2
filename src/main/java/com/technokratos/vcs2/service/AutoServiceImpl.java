@@ -15,8 +15,11 @@ import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +33,7 @@ public class AutoServiceImpl implements AutoService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
     private final AutoMapper autoMapper;
+    private final EntityManager entityManager;
     @Override
     public UUID addAuto(AutoRequestDto auto) {
         UUID autoId = UUID.randomUUID();
@@ -42,8 +46,8 @@ public class AutoServiceImpl implements AutoService {
     }
 
     @Override
-    public List<ListElementAutoResponseDto> getAllAutos(int page, int size) {
-        List<Auto> all = autoRepository.findAll(PageRequest.of(page, size)).get().toList();
+    public List<ListElementAutoResponseDto> getAllAutos(int page, int size, UUID brand, String sort, String order) {
+        List<Auto> all = findFilteredAndSorted(brand,sort,order, PageRequest.of(page, size), null);
         return getListElementAutoResponseDtos(all);
     }
 
@@ -109,10 +113,9 @@ public class AutoServiceImpl implements AutoService {
     }
 
     @Override
-    public List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size) {
-        Page<Auto> list = autoRepository.getPageableAutoFromUser(userId, PageRequest.of(page,size));
-        List<Auto> all = list.toList();
-        return getListElementAutoResponseDtos(all);
+    public List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size, String sort, String order, UUID brand_id) {
+        List<Auto> list = findFilteredAndSorted(brand_id, sort, order, PageRequest.of(page,size), userId);
+        return getListElementAutoResponseDtos(list);
     }
 
     private List<ListElementAutoResponseDto> getListElementAutoResponseDtos(List<Auto> all) {
@@ -130,5 +133,54 @@ public class AutoServiceImpl implements AutoService {
     public Long getAutoPagesCount(UUID userID) {
         Long l = autoRepository.countOf(userID);
         return l % 10 == 0 ? l / 10 : l / 10 + 1;
+    }
+
+    public List<Auto> findFilteredAndSorted(UUID brand, String sort, String order, Pageable pageable, UUID user) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Auto> query = cb.createQuery(Auto.class);
+        Root<Auto> root = query.from(Auto.class);
+
+        // Фильтр по бренду
+        List<Predicate> predicates = new ArrayList<>();
+        if (brand != null) {
+            predicates.add(cb.equal(root.get("brand").get("id"), brand));
+        }
+        if (user != null) {
+            predicates.add(cb.equal(root.get("user").get("id"), user));
+        }
+        // Сортировка
+        Order orderBy = null;
+        if (sort != null) {
+            switch (sort) {
+                case "price":
+                    orderBy = "desc".equals(order) ? cb.desc(root.get("price")) : cb.asc(root.get("price"));
+                    break;
+                case "mileage":
+                    orderBy = "desc".equals(order) ? cb.desc(root.get("mileage")) : cb.asc(root.get("mileage"));
+                    break;
+                case "year":
+                    orderBy = "desc".equals(order) ? cb.desc(root.get("year")) : cb.asc(root.get("year"));
+                    break;
+                default:
+                    orderBy = cb.asc(root.get("id")); // По умолчанию
+            }
+        } else {
+            orderBy = cb.desc(root.get("id"));
+        }
+        query.orderBy(orderBy);
+
+        // Сборка и выполнение запроса
+        query.select(root).where(predicates.toArray(new Predicate[0]));
+        return entityManager.createQuery(query)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+    }
+
+    @Override
+    public Long getAllAutosPagesCount(UUID brandId) {
+        Long l = autoRepository.countOfBrandCars(brandId);
+        if (l == 0) l = 1L;
+        return l % 10 == 0? l / 10 : l / 10 + 1;
     }
 }

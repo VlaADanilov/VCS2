@@ -14,7 +14,7 @@ public interface AutoService {
 
     UUID addAuto(@Valid AutoRequestDto auto);
 
-    List<ListElementAutoResponseDto> getAllAutos(int page, int size);
+    List<ListElementAutoResponseDto> getAllAutos(int page, int size, UUID brand, String sort, String order);
 
     List<AutoResponseDto> getAutosByName(String name);
 
@@ -26,13 +26,15 @@ public interface AutoService {
 
     boolean isOwner(UUID autoId, String username);
 
-    List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size);
+    List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size, String sort, String order, UUID brand_id);
 
     void checkForExistsAuto(UUID id);
 
     void addImageToAuto(UUID autoId, UUID imageId);
 
     Long getAllAutosPagesCount();
+
+    Long getAllAutosPagesCount(UUID brandId);
 
     Long getAutoPagesCount(UUID userId);
 }

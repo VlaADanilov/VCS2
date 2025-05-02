@@ -77,4 +77,10 @@ public class LikeServiceImpl implements LikeService {
                 autoRepository.getReferenceById(autoId)
         );
     }
+
+    @Override
+    public Long getAllLikesCountPages(UUID id) {
+        Long countOfLikeByUserId = likeRepository.getCountOfLikeByUserId(id);
+        return countOfLikeByUserId % 10 == 0? countOfLikeByUserId / 10 : countOfLikeByUserId / 10 + 1;
+    }
 }

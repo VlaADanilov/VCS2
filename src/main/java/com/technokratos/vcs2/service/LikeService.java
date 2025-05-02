@@ -13,4 +13,6 @@ public interface LikeService {
     void removeLike(UUID userId, UUID autoId);
 
     boolean existLike(UUID userId, UUID autoId);
+
+    Long getAllLikesCountPages(UUID id);
 }

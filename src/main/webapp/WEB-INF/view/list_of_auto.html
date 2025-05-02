@@ -13,6 +13,30 @@
             <h1>Список объявлений</h1>
         </div>
         <div>
+            <form th:action="@{${myPath}}" method="get" class="filter-form">
+                <label for="brand_id">Brand:</label>
+                <select id="brand_id" name="brand_id">
+                    <option value="">Любой бренд</option>
+                    <option th:each="br : ${brands}" th:object="${br}"
+                            th:value="*{id}"
+                            th:text="*{name}"
+                    th:selected="${br.id == brand}">
+                    </option>
+                </select><br />
+
+                <select name="sort">
+                    <option th:selected="${sort == 'price'}" value="price">Цена</option>
+                    <option th:selected="${sort == 'mileage'}" value="mileage">Пробег</option>
+                    <option th:selected="${sort == 'year'}" value="year">Год</option>
+                </select>
+
+                <select name="order">
+                    <option th:selected="${order == 'asc'}" value="asc">Возрастание</option>
+                    <option th:selected="${order == 'desc'}" value="desc">Убывание</option>
+                </select>
+
+                <button type="submit">Применить</button>
+            </form>
             <ul class = "list1a">
                     <li th:each="car : ${list}" th:object="${car}">
                         <p class="nameOfAuthor" th:text="*{username}"></p>
@@ -37,18 +61,19 @@
             <ul class="pagination">
                 <!-- Стрелка "Назад", если не первая страница -->
                 <li th:if="${currentPage > 1}">
-                    <a th:href="@{${myPath}(page=${currentPage - 1})}">«</a>
+                    <a th:href="@{${myPath}(page=${currentPage - 1}, sort=${sort}, order=${order}, brand_id=${brand})}">«</a>
                 </li>
 
                 <!-- Пагинация по всем страницам -->
                 <li th:each="i : ${#numbers.sequence(1, pageCount)}"
                     th:class="${i == currentPage} ? 'active' : ''">
-                    <a th:href="@{${myPath}(page=${i})}" th:text="${i}"></a>
+                    <a th:href="@{${myPath}(page=${i}, sort=${sort}, order=${order}, brand_id=${brand})}"
+                       th:text="${i}"></a>
                 </li>
 
                 <!-- Стрелка "Вперёд", если не последняя страница -->
                 <li th:if="${currentPage < pageCount}">
-                    <a th:href="@{${myPath}(page=${currentPage + 1})}">»</a>
+                    <a th:href="@{${myPath}(page=${currentPage + 1}, sort=${sort}, order=${order}, brand_id=${brand})}">»</a>
                 </li>
             </ul>
         </div>

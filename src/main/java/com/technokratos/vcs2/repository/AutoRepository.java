@@ -22,4 +22,7 @@ public interface AutoRepository extends JpaRepository<Auto, UUID> {
 
     @Query("SELECT COUNT(a) FROM Auto a WHERE a.user.id = :userId")
     Long countOf(@Param("userId") UUID userId);
+
+    @Query("SELECT COUNT(a) FROM Auto a WHERE a.brand.id = :brandId")
+    Long countOfBrandCars(@Param("brandId") UUID brandId);
 }

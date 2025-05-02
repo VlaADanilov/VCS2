@@ -3,6 +3,7 @@ package com.technokratos.vcs2.controller;
 import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
+import com.technokratos.vcs2.model.dto.response.BrandResponseDto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.BrandService;
@@ -34,12 +35,24 @@ public class AutoController {
     public String getAllAutoPageable(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            Model model) {
-        model.addAttribute("list",autoService.getAllAutos(page - 1, size));
+            Model model,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) UUID brand_id) {
+        model.addAttribute("list",autoService.getAllAutos(page - 1, size,brand_id, sort, order));
         model.addAttribute("myPath","/auto");
         model.addAttribute("back","/");
-        model.addAttribute("pageCount", autoService.getAllAutosPagesCount());
+        if(brand_id == null) {
+            model.addAttribute("pageCount", autoService.getAllAutosPagesCount());
+        } else {
+            model.addAttribute("pageCount", autoService.getAllAutosPagesCount(brand_id));
+        }
+        List<BrandResponseDto> brands = brandService.getBrands();
+        model.addAttribute("brands", brands);
         model.addAttribute("currentPage", page);
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
+        model.addAttribute("brand", brand_id);
         return "list_of_auto";
     }
 
@@ -94,6 +107,7 @@ public class AutoController {
                 UUID.randomUUID(),
                 List.of()));
         model.addAttribute("method", "POST");
+        model.addAttribute("back", "/");
         return "update_auto_form";
     }
 
@@ -122,6 +136,7 @@ public class AutoController {
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("autoId", carId.toString());
         model.addAttribute("method", "PUT");
+        model.addAttribute("back", "/auto/%s".formatted(carId));
         return "update_auto_form";
     }
 
@@ -138,15 +153,23 @@ public class AutoController {
     @PreAuthorize("isAuthenticated()")
     public String getMyAutoList(@RequestParam(defaultValue = "1") int page,
                                 @RequestParam(defaultValue = "10") int size,
+                                @RequestParam(required = false) String sort,
+                                @RequestParam(required = false) String order,
+                                @RequestParam(required = false) UUID brand_id,
                                 Model model) {
         model.addAttribute("list",autoService.getAllAutoFromUser(
                 UserReturner.getCurrentUser().get().getId(),
                 page - 1,
-                size));
+                size,
+                sort,order,brand_id));
         model.addAttribute("myPath","/auto/myCars");
         model.addAttribute("back", "/");
-        model.addAttribute("pageCount", autoService.getAutoPagesCount(UserReturner.getCurrentUser().get().getId()));
+        model.addAttribute("pageCount", autoService.getAutoPagesCount(UserReturner.getCurrentUser().get().getId())); //TODO нужно будет исправить
         model.addAttribute("currentPage", page);
+        model.addAttribute("brands", brandService.getBrands());
+        model.addAttribute("sort", sort);
+        model.addAttribute("order", order);
+        model.addAttribute("brand", brand_id);
         return "list_of_auto";
     }
 

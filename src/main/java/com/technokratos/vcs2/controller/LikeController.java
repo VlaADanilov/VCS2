@@ -17,16 +17,20 @@ public class LikeController {
     private final LikeService likeService;
     @GetMapping
     public String like(Model model,
-                       @RequestParam(defaultValue = "0") int page,
+                       @RequestParam(defaultValue = "1") int page,
                        @RequestParam(defaultValue = "10") int size) {
         model.addAttribute("list",likeService.getAutoWhoUserLike(UserReturner
                     .getCurrentUser()
                     .get()
                     .getId(),
-                page,
+                page - 1,
                 size));
         model.addAttribute("myPath","/like");
         model.addAttribute("back","/");
+        Long allLikesCountPages = likeService.getAllLikesCountPages(UserReturner.getCurrentUser().get().getId());
+        if (allLikesCountPages == 0) allLikesCountPages = 1L;
+        model.addAttribute("pageCount", allLikesCountPages);
+        model.addAttribute("currentPage", page);
         return "list_of_auto";
     }
 
