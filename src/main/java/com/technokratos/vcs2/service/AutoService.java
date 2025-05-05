@@ -36,5 +36,5 @@ public interface AutoService {
 
     Long getAllAutosPagesCount(UUID brandId);
 
-    Long getAutoPagesCount(UUID userId);
+    Long getAutoPagesCount(UUID userId, UUID brandId);
 }

@@ -38,7 +38,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/auto",
                             "/auto/{car_id}",
                             "/employee",
-                            "/api/image/{image_id}").permitAll()
+                            "/api/image/{image_id}",
+                            "/swagger-ui/**",
+                            "/currency/**").permitAll()
                     .antMatchers("/employee/**","/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

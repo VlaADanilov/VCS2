@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.api.AdminApi;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,21 +11,14 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin")
-public class AdminController {
+public class AdminController implements AdminApi {
     private final UserServiceImpl userService;
 
-    @PostMapping("/{user_id}/doModerator")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public void doModerator(@PathVariable("user_id")UUID userId) {
+    public void doModerator(UUID userId) {
         userService.doModerator(userId);
     }
 
-    @PostMapping("/{user_id}/doUser")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    public void doDefault(@PathVariable("user_id")UUID userId) {
+    public void doDefault(UUID userId) {
         userService.doDefault(userId);
     }
 }

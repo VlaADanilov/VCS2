@@ -130,8 +130,13 @@ public class AutoServiceImpl implements AutoService {
     }
 
     @Override
-    public Long getAutoPagesCount(UUID userID) {
-        Long l = autoRepository.countOf(userID);
+    public Long getAutoPagesCount(UUID userID, UUID brandID) {
+        Long l;
+        if (brandID == null) {
+            l = autoRepository.countOf(userID);
+        } else {
+            l = autoRepository.countOf(userID, brandID);
+        }
         return l % 10 == 0 ? l / 10 : l / 10 + 1;
     }
 

@@ -10,6 +10,8 @@ import com.technokratos.vcs2.service.BrandService;
 import com.technokratos.vcs2.service.LikeService;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import com.technokratos.vcs2.util.UserReturner;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +26,7 @@ import java.util.UUID;
 
 @Controller()
 @RequestMapping("/auto")
+@Tag(name = "AutoController", description = "Возможности, связанные с авто")
 @RequiredArgsConstructor
 public class AutoController {
     private final AutoService autoService;
@@ -115,6 +118,10 @@ public class AutoController {
     @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
+    @Operation(
+            summary = "Добавление объявления",
+            description = "Позволяет добавить объявление по продаже авто"
+    )
     public UUID addAuto(@RequestBody AutoRequestDto auto) {
         return autoService.addAuto(auto);
     }
@@ -164,7 +171,7 @@ public class AutoController {
                 sort,order,brand_id));
         model.addAttribute("myPath","/auto/myCars");
         model.addAttribute("back", "/");
-        model.addAttribute("pageCount", autoService.getAutoPagesCount(UserReturner.getCurrentUser().get().getId())); //TODO нужно будет исправить
+        model.addAttribute("pageCount", autoService.getAutoPagesCount(UserReturner.getCurrentUser().get().getId(), brand_id));
         model.addAttribute("currentPage", page);
         model.addAttribute("brands", brandService.getBrands());
         model.addAttribute("sort", sort);

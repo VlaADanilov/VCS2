@@ -1,10 +1,10 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.api.ImageApi;
 import com.technokratos.vcs2.model.entity.Image;
 import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.EmployeeService;
 import com.technokratos.vcs2.service.ImageService;
-import com.technokratos.vcs2.util.FileSystemProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -14,31 +14,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/image")
 @RequiredArgsConstructor
-public class ImageController {
+public class ImageController implements ImageApi {
     private final AutoService autoService;
     private final ImageService imageService;
     private final EmployeeService employeeService;
 
     private final Path rootLocation = Paths.get("/vcs");
 
-    @PostMapping("/upload/auto/{auto_id}")
-    @PreAuthorize("@securityService.canDelete(#auto_id, authentication.name) " +
-            "or hasAnyRole('ADMIN', 'MODERATOR')")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file
-            , @PathVariable("auto_id") UUID auto_id) {
+    public ResponseEntity<String> upload(MultipartFile file,
+                                         UUID auto_id) {
         autoService.checkForExistsAuto(auto_id);
         ResponseEntity<String> response = imageService.uploadImage(file);
         if (response.getStatusCode().is2xxSuccessful()) {
@@ -50,11 +41,8 @@ public class ImageController {
         }
     }
 
-    @DeleteMapping("/auto/{auto_id}/delete/{image_id}")
-    @PreAuthorize("@securityService.canDelete(#auto_id, authentication.name) " +
-            "or hasAnyRole('ADMIN', 'MODERATOR')")
-    public ResponseEntity<String> deleteImageFromAuto(@PathVariable("auto_id") UUID auto_id,
-            @PathVariable("image_id") UUID image_id) {
+    public ResponseEntity<String> deleteImageFromAuto(UUID auto_id,
+                                                      UUID image_id) {
         autoService.checkForExistsAuto(auto_id);
         imageService.checkForExistsImageAndAutoContainsIt(auto_id, image_id);
         imageService.deleteImage(image_id, auto_id);
@@ -62,8 +50,8 @@ public class ImageController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{image_id}")
-    public ResponseEntity<Resource> viewImage(@PathVariable("image_id") UUID image_id) {
+
+    public ResponseEntity<Resource> viewImage(UUID image_id) {
         Image image = imageService.getImageById(image_id);
         String filename = image.getImage();
         try {
@@ -85,10 +73,8 @@ public class ImageController {
         }
     }
 
-    @DeleteMapping("/employee/{employeeId}/delete/{imageId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> deleteEmployeeImage(@PathVariable("employeeId") UUID employeeId,
-                                                      @PathVariable("imageId") UUID imageId) {
+    public ResponseEntity<String> deleteEmployeeImage(UUID employeeId,
+                                                      UUID imageId) {
         employeeService.checkForExistsEmployee(employeeId);
         imageService.checkForExistsImageAndEmployeeContainsIt(employeeId,imageId);
         imageService.deleteImageFromEmployee(imageId, employeeId);
@@ -96,10 +82,9 @@ public class ImageController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/upload/employee/{employee_id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> uploadImageToEmployee(@RequestParam("file") MultipartFile file
-            , @PathVariable("employee_id") UUID employeeId) {
+
+    public ResponseEntity<String> uploadImageToEmployee(MultipartFile file,
+                                                        UUID employeeId) {
         employeeService.checkForExistsEmployee(employeeId);
         ResponseEntity<String> response = imageService.uploadImage(file);
         if (response.getStatusCode().is2xxSuccessful()) {

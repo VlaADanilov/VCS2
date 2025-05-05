@@ -212,3 +212,65 @@ function addReport(autoId) {
         });
     });
 }
+
+function showCurrencyForm() {
+    const form = document.getElementById('currency-form');
+    if (form.style.display === 'none') {
+        loadCurrencies(form.getAttribute("data-url"));
+        form.style.display = 'block';
+    }
+}
+
+function loadCurrencies(url) {
+    $.ajax({
+        url: url,
+        method: 'GET',
+        success: function(currencies) {
+            const select = document.getElementById('currency');
+            select.innerHTML = ''; // очищаем старые опции
+            currencies.forEach(currency => {
+                const option = document.createElement('option');
+                option.value = currency;
+                option.text = currency;
+                select.appendChild(option);
+            });
+        },
+        error: function() {
+            alert('Не удалось загрузить валюты.');
+        }
+    });
+}
+
+function convertToCurrency() {
+    const price = document.getElementById('price').textContent;
+    const currency = document.getElementById('currency').value;
+    const amount = parseFloat(price);
+    const form = document.getElementById('currency-form');
+    const url = form.getAttribute("data-url");
+    if (!currency || isNaN(amount)) {
+        alert('Заполните все поля');
+        return;
+    }
+
+    $.ajax({
+        url: url + '/toOtherCurrency',
+        method: 'GET',
+        data: {
+            currency: currency,
+            amount: amount
+        },
+        success: function(result) {
+            const formattedResult = result.toFixed(2);
+            document.getElementById('converted-price').innerHTML =
+                `<strong>${formattedResult}</strong> ${currency}`;
+        },
+        error: function(xhr) {
+            alert('Ошибка при переводе: ' + (xhr.responseText || 'Неизвестная ошибка'));
+        }
+    });
+}
+
+function closeForm() {
+    const form = document.getElementById('currency-form');
+    form.style.display = 'none';
+}

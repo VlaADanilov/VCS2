@@ -22,4 +22,7 @@ public interface LikeRepository extends JpaRepository<Like, UUID> {
 
     @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = :id")
     Long getCountOfLikeByUserId(@Param("id") UUID id);
+
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = :id AND l.auto.brand.id = :brandId")
+    Long getCountOfLikeByUserId(@Param("id") UUID id,@Param("brandId") UUID brandId);
 }

@@ -8,7 +8,6 @@ import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.RegisterUserDto;
 import com.technokratos.vcs2.model.dto.response.UserResponseDto;
 import com.technokratos.vcs2.model.entity.User;
-import com.technokratos.vcs2.repository.ReportRepository;
 import com.technokratos.vcs2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -89,5 +88,22 @@ public class UserServiceImpl {
     public Long countOfAllUserPages() {
         long r = userRepository.count();
         return r % 10 == 0 ? r / 10 : r / 10 + 1;
+    }
+
+    public List<UserResponseDto> searchUsers(String search, int page, int size) {
+        return userRepository.findByUsernameStartingWithIgnoreCase(search, PageRequest.of(page, size))
+                .stream().map(user -> new UserResponseDto(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getRole()
+                )).toList();
+    }
+
+    public Long countOfAllUserPages(String search) {
+        Long l = userRepository.countByUsernameStartingWithIgnoreCase(search);
+        if (l == 0) {
+            l = 1L;
+        }
+        return l % 10 == 0 ? l / 10 : l / 10 + 1;
     }
 }

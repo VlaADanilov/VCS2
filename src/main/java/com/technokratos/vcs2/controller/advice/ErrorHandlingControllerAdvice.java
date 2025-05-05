@@ -65,4 +65,20 @@ public class ErrorHandlingControllerAdvice {
         model.addAttribute("back", ex.getReturnToPage());
         return "error";
     }
+
+    @ResponseBody
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<String> onException(
+            ServiceException ex
+    ) {
+        return new ResponseEntity<>(ex.getMessage(),ex.getStatus());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> onException(
+            Exception ex
+    ) {
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
 }

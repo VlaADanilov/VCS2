@@ -13,6 +13,15 @@
         <h1>Пользователи</h1>
     </div>
 
+    <div id="search-box" align="center">
+        <form method="get" th:action="@{/user}">
+            <input type="text" name="search" placeholder="Поиск по имени..." />
+            <button type="submit">Искать</button>
+            <!-- Сброс фильтра -->
+            <a th:href="@{/user}" class="reset-link">Сбросить</a>
+        </form>
+    </div>
+
     <div>
         <ul class = "list1a">
         </ul>
@@ -44,18 +53,18 @@
         <ul class="pagination">
             <!-- Стрелка "Назад", если не первая страница -->
             <li th:if="${currentPage > 1}">
-                <a th:href="@{/user(page=${currentPage - 1})}">«</a>
+                <a th:href="@{/user(page=${currentPage - 1}, search = ${search})}">«</a>
             </li>
 
             <!-- Пагинация по всем страницам -->
             <li th:each="i : ${#numbers.sequence(1, pageCount)}"
                 th:class="${i == currentPage} ? 'active' : ''">
-                <a th:href="@{/user(page=${i})}" th:text="${i}"></a>
+                <a th:href="@{/user(page=${i}, search = ${search})}" th:text="${i}"></a>
             </li>
 
             <!-- Стрелка "Вперёд", если не последняя страница -->
             <li th:if="${currentPage < pageCount}">
-                <a th:href="@{/user(page=${currentPage + 1})}">»</a>
+                <a th:href="@{/user(page=${currentPage + 1}, search = ${search})}">»</a>
             </li>
         </ul>
     </div>

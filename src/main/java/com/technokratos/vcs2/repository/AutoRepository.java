@@ -20,9 +20,12 @@ public interface AutoRepository extends JpaRepository<Auto, UUID> {
     @Query("SELECT image FROM Auto auto JOIN auto.images image WHERE auto.id=:autoId AND image.id=:imageId")
     Optional<Image> getImageWhereAutoId(@Param("autoId") UUID autoId, @Param("imageId") UUID imageId);
 
-    @Query("SELECT COUNT(a) FROM Auto a WHERE a.user.id = :userId")
-    Long countOf(@Param("userId") UUID userId);
-
     @Query("SELECT COUNT(a) FROM Auto a WHERE a.brand.id = :brandId")
     Long countOfBrandCars(@Param("brandId") UUID brandId);
+
+    @Query("SELECT COUNT(a) FROM Auto a WHERE a.user.id = :userId AND a.brand.id = :brandId")
+    Long countOf(@Param("userId") UUID userID,@Param("brandId") UUID brandId);
+
+    @Query("SELECT COUNT(a) FROM Auto a WHERE a.user.id = :userId")
+    Long countOf(@Param("userId") UUID userID);
 }

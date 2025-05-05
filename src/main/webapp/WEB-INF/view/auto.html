@@ -36,6 +36,16 @@
             <h1>Объявление</h1>
         </div>
         <div id = "content">
+            <div id="currency-form" style="display:none; margin-top:10px;" th:data-url="@{/currency}">
+                <label for="currency">Выберите валюту:</label>
+                <select id="currency" name="currency">
+                    <!-- Валюты будут загружены динамически -->
+                </select>
+
+                <button onclick="convertToCurrency()">Перевести</button>
+                <button onclick="closeForm()">Close</button>
+                <div id="converted-price" style="margin-top:5px;"></div>
+            </div>
             <div id = "left-content">
             </div>
             <script th:inline="javascript">
@@ -101,7 +111,10 @@
                     <p ><strong>Модель: </strong><span th:text="*{model}"></span></p>
                     <p><strong>Страна производства: </strong><span th:text="${brand.country}"></span></p>
                     <p><strong>Год выпуска: </strong><span th:text="*{year}"></span></p>
-                    <p><strong>Цена: </strong><span th:text="*{price}"></span> руб.</p>
+                    <p>
+                        <strong>Цена: </strong><span id = 'price' th:text="*{price}"></span> руб.
+                        <img th:src="@{/resources/icons/question.svg}" alt="?" class="myImage2" onclick="showCurrencyForm()">
+                    </p>
                     <p><strong>Пробег: </strong><span th:text="*{mileage}"></span> км.</p>
                     <p><strong>Описание: </strong><span th:text="*{description}"></span></p>
                 </div>
