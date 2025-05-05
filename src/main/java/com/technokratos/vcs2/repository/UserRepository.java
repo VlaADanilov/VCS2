@@ -21,4 +21,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Page<User> findByUsernameStartingWithIgnoreCase(String search, PageRequest of);
 
     Long countByUsernameStartingWithIgnoreCase(String search);
+
+    boolean existsByEmail(String email);
+
+    Optional<User> getByEmail(String email);
 }

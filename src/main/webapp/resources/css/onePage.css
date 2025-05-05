@@ -45,7 +45,7 @@
     opacity: 1;
 }
 #content{
-    width: calc(100%); /* Ширина блока */
+    width: calc(97.77%); /* Ширина блока */
     margin-top: 10px;
     border-radius: 5px; /* Закругляем углы блока */
 }

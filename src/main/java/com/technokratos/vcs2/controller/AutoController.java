@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.api.AutoApi;
 import com.technokratos.vcs2.model.Role;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
 import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
@@ -25,23 +26,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller()
-@RequestMapping("/auto")
-@Tag(name = "AutoController", description = "Возможности, связанные с авто")
 @RequiredArgsConstructor
-public class AutoController {
+public class AutoController implements AutoApi {
     private final AutoService autoService;
     private final BrandService brandService;
     private final UserServiceImpl userService;
     private final LikeService likeService;
 
-    @GetMapping
     public String getAllAutoPageable(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size,
+            int page,
+            int size,
             Model model,
-            @RequestParam(required = false) String sort,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) UUID brand_id) {
+            String sort,
+            String order,
+            UUID brand_id) {
         model.addAttribute("list",autoService.getAllAutos(page - 1, size,brand_id, sort, order));
         model.addAttribute("myPath","/auto");
         model.addAttribute("back","/");
@@ -59,10 +57,10 @@ public class AutoController {
         return "list_of_auto";
     }
 
-    @GetMapping("/{car_id}")
-    public String getAuto(@PathVariable("car_id") UUID carId,
+
+    public String getAuto(UUID carId,
                           Model model,
-                          @RequestParam(required = false, defaultValue = "/auto") String referer) {
+                          String referer) {
         model.addAttribute("backUrl",correctReferer(referer));
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("brand", brandService.getBrandByAutoId(carId));
@@ -96,8 +94,7 @@ public class AutoController {
         return "/auto";
     }
 
-    @GetMapping("/add")
-    @PreAuthorize("isAuthenticated()")
+
     public String addAutoForm(Model model) {
         model.addAttribute("brands", brandService.getBrands());
         model.addAttribute("auto", new AutoResponseDto("",
@@ -114,31 +111,17 @@ public class AutoController {
         return "update_auto_form";
     }
 
-    @PostMapping
-    @PreAuthorize("isAuthenticated()")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    @Operation(
-            summary = "Добавление объявления",
-            description = "Позволяет добавить объявление по продаже авто"
-    )
-    public UUID addAuto(@RequestBody AutoRequestDto auto) {
+
+    public UUID addAuto(AutoRequestDto auto) {
         return autoService.addAuto(auto);
     }
 
-    @DeleteMapping("/{car_id}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    @PreAuthorize("@securityService.canDelete(#carId, authentication.name) " +
-            "or hasAnyRole('ADMIN', 'MODERATOR')")
-    public void deleteAuto(@PathVariable("car_id") UUID carId) {
+
+    public void deleteAuto(UUID carId) {
         autoService.deleteAuto(carId);
     }
 
-    @GetMapping("/{car_id}/updateForm")
-    @PreAuthorize("@securityService.canDelete(#carId, authentication.name) " +
-            "or hasAnyRole('ADMIN', 'MODERATOR')")
-    public String updateAutoForm(@PathVariable("car_id") UUID carId, Model model) {
+    public String updateAutoForm(UUID carId, Model model) {
         model.addAttribute("brands", brandService.getBrands());
         model.addAttribute("auto", autoService.getAutoById(carId));
         model.addAttribute("autoId", carId.toString());
@@ -147,22 +130,17 @@ public class AutoController {
         return "update_auto_form";
     }
 
-    @PutMapping("/{car_id}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    @PreAuthorize("@securityService.canDelete(#carId, authentication.name) " +
-            "or hasAnyRole('ADMIN', 'MODERATOR')")
-    public void updateAuto(@PathVariable("car_id") UUID carId, @RequestBody AutoRequestDto auto) {
+
+    public void updateAuto(UUID carId, AutoRequestDto auto) {
         autoService.updateAuto(auto, carId);
     }
 
-    @GetMapping("/myCars")
-    @PreAuthorize("isAuthenticated()")
-    public String getMyAutoList(@RequestParam(defaultValue = "1") int page,
-                                @RequestParam(defaultValue = "10") int size,
-                                @RequestParam(required = false) String sort,
-                                @RequestParam(required = false) String order,
-                                @RequestParam(required = false) UUID brand_id,
+
+    public String getMyAutoList(int page,
+                                int size,
+                                String sort,
+                                String order,
+                                UUID brand_id,
                                 Model model) {
         model.addAttribute("list",autoService.getAllAutoFromUser(
                 UserReturner.getCurrentUser().get().getId(),
@@ -171,7 +149,9 @@ public class AutoController {
                 sort,order,brand_id));
         model.addAttribute("myPath","/auto/myCars");
         model.addAttribute("back", "/");
-        model.addAttribute("pageCount", autoService.getAutoPagesCount(UserReturner.getCurrentUser().get().getId(), brand_id));
+        UUID id = UserReturner.getCurrentUser().get().getId();
+        Long autoPagesCount = autoService.getAutoPagesCount(id, brand_id);
+        model.addAttribute("pageCount", autoPagesCount == 0?1:autoPagesCount);
         model.addAttribute("currentPage", page);
         model.addAttribute("brands", brandService.getBrands());
         model.addAttribute("sort", sort);

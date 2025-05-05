@@ -1,50 +1,39 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.api.EmployeeApi;
 import com.technokratos.vcs2.model.dto.request.EmployeeRequestDto;
-import com.technokratos.vcs2.model.dto.response.EmployeeResponseDto;
-import com.technokratos.vcs2.model.entity.Employee;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.EmployeeService;
-import com.technokratos.vcs2.service.UserServiceImpl;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/employee")
 @RequiredArgsConstructor
-public class EmployeeController {
+public class EmployeeController implements EmployeeApi {
     private final EmployeeService employeeService;
 
-    @GetMapping
+
     public String getEmployee(Model model) {
         model.addAttribute("list", employeeService.getAllEmployees());
         model.addAttribute("can", canCRUD());
         return "list_of_employees";
     }
 
-    @DeleteMapping("/{emp_id}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public void deleteEmployee(@PathVariable("emp_id") UUID emp_id) {
+
+    public void deleteEmployee(UUID emp_id) {
         employeeService.delete(emp_id);
     }
 
-    @PostMapping()
-    @ResponseBody
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addEmployee(@RequestBody EmployeeRequestDto employee) {
+
+    public void addEmployee(EmployeeRequestDto employee) {
         employeeService.add(employee);
     }
 
-    @GetMapping("/add")
     public String getAddEmployeeForm() {
         return "add_employee_form";
     }

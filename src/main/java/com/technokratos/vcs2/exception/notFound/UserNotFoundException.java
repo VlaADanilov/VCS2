@@ -9,4 +9,8 @@ public class UserNotFoundException extends NotFoundException {
     public UserNotFoundException(UUID id) {
         super("User with id not found: %s".formatted(id), "/");
     }
+
+    public UserNotFoundException(String email, boolean emailVerified) {
+        super("User with email not found: %s".formatted(email), "/");
+    }
 }

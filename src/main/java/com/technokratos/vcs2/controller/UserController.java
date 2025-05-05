@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.controller;
 
+import com.technokratos.vcs2.api.UserApi;
 import com.technokratos.vcs2.model.dto.response.UserResponseDto;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.AutoService;
@@ -7,12 +8,10 @@ import com.technokratos.vcs2.service.BrandService;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -20,17 +19,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserApi {
     private final UserServiceImpl userService;
     private final AutoService autoService;
     private final BrandService brandService;
 
-    @GetMapping
-    public String getAllUsers(@RequestParam(defaultValue = "1") int page,
-                              @RequestParam(defaultValue = "10") int size,
-                              @RequestParam(required = false) String search,
+
+    public String getAllUsers(int page,
+                              int size,
+                              String search,
                               Model model) {
         List<UserResponseDto> list;
         Long countOfPage;
@@ -49,14 +47,14 @@ public class UserController {
         return "list_of_users";
     }
 
-    @GetMapping("/{user_id}/auto")
-    public String getAllAutosFrom(@PathVariable("user_id") UUID user_id,
+
+    public String getAllAutosFrom(UUID user_id,
                                   Model model,
-                                  @RequestParam(defaultValue = "1") int page,
-                                  @RequestParam(defaultValue = "10") int size,
-                                  @RequestParam(required = false) String sort,
-                                  @RequestParam(required = false) String order,
-                                  @RequestParam(required = false) UUID brand_id ) {
+                                  int page,
+                                  int size,
+                                  String sort,
+                                  String order,
+                                  UUID brand_id ) {
         model.addAttribute("list", autoService.getAllAutoFromUser(user_id, page - 1, size,sort,order,brand_id));
         model.addAttribute("myPath", "/user/" + user_id + "/auto");
         model.addAttribute("back", "/user");

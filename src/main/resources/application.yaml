@@ -24,3 +24,5 @@ server:
 vcs:
   imageresourcepath:
     path: "/vcs"
+microservice:
+  url: http://localhost:8082

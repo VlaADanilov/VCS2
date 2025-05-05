@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.controller.advice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.technokratos.vcs2.exception.ImageExistInThisEmployeeException;
 import com.technokratos.vcs2.exception.LikeException;
 import com.technokratos.vcs2.exception.ServiceException;
@@ -11,6 +12,7 @@ import com.technokratos.vcs2.exception.registration.UsernameExistsException;
 import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
 import com.technokratos.vcs2.model.dto.response.Violation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -23,8 +25,9 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class ErrorHandlingControllerAdvice {
-
+    private final ObjectMapper objectMapper;
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -72,13 +75,5 @@ public class ErrorHandlingControllerAdvice {
             ServiceException ex
     ) {
         return new ResponseEntity<>(ex.getMessage(),ex.getStatus());
-    }
-
-    @ResponseBody
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> onException(
-            Exception ex
-    ) {
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

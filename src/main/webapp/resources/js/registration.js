@@ -32,10 +32,10 @@ $(document).ready(function () {
                 $('#success').empty();
 
                 try {
-                    const response = JSON.parse(xhr.responseText);
+
 
                     if (xhr.status === 400) {
-                        // Проверяем структуру JSON
+                        try{const response = JSON.parse(xhr.responseText);
                         if (response.violations && Array.isArray(response.violations)) {
                             // Формируем текст ошибок из массива violations
                             const errorMessages = response.violations.map(violation =>
@@ -48,6 +48,9 @@ $(document).ready(function () {
                         } else {
                             // Неизвестная структура JSON
                             $('#errors').html("Неизвестная ошибка. Пожалуйста, попробуйте снова.");
+                        }
+                        } catch (e) {
+                            $('#errors').html("Ошибка регистрации: " + xhr.responseText);
                         }
                     } else {
                         // Общая ошибка для других статусов
