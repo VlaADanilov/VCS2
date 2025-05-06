@@ -1,3 +1,13 @@
+document.addEventListener("DOMContentLoaded", function () {
+    token = document.querySelector('meta[name="_csrf"]').content;
+    header = document.querySelector('meta[name="_csrf_header"]').content;
+    $.ajaxSetup({
+        headers: {
+            [header]: token
+        }
+    });
+})
+
 function going() {
     const goingButton = document.getElementById("goingButton");
     const url = goingButton.getAttribute("data-url");
@@ -19,7 +29,7 @@ function going() {
 }
 
 function handleDelete(id) {
-    const isConfirmed = confirm("Вы уверены, что хотите удалить этого сотрудника и лишить его всех прав?");
+    const isConfirmed = confirm("Вы уверены, что хотите удалить эту жалобу?");
     if (isConfirmed) {
         const url = del.getAttribute("data-url");
         $.ajax({

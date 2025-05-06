@@ -1,6 +1,14 @@
+let token;
+let header;
 document.addEventListener("DOMContentLoaded", function () {
     const deleteIcon = document.getElementById("delete_auto");
-
+    token = document.querySelector('meta[name="_csrf"]').content;
+    header = document.querySelector('meta[name="_csrf_header"]').content;
+    $.ajaxSetup({
+        headers: {
+            [header]: token
+        }
+    });
     if (deleteIcon) {
         deleteIcon.addEventListener("click", function () {
             const url = deleteIcon.getAttribute("data-url");
@@ -13,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": getCsrfToken() // Если используется CSRF-защита
+                        [header]:token
                     }
                 })
                     .then(response => {
@@ -86,7 +94,10 @@ function uploadImage(autoId) {
     const url = addIcon.getAttribute("data-url");
     fetch(url + "/" + autoId, {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+            [header]: token
+        }
     })
         .then(response => {
             if (!response.ok) {
@@ -117,6 +128,9 @@ function addLike(autoId) {
     const url = heart.getAttribute("data-url");
     fetch(url + "/" + autoId, {
         method: 'POST',
+        headers: {
+            [header]: token
+        }
     })
         .then(response => {
             if (!response.ok) {
@@ -138,6 +152,9 @@ function deleteLike(autoId) {
     const url = heart.getAttribute("data-url");
     fetch(url + "/" + autoId, {
         method: 'DELETE',
+        headers: {
+            [header]: token
+        }
     })
         .then(response => {
             if (!response.ok) {

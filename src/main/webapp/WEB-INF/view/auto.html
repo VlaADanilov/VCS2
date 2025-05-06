@@ -1,5 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <title>Информация об автомобиле</title>
     <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
@@ -55,7 +57,13 @@
                     const images = /*[[${auto.images}]]*/ [];
                     const showIcons = /*[[${showIcons}]]*/ false;
                     const autoId = /*[[${autoId}]]*/ '';
-
+                    const token = document.querySelector('meta[name="_csrf"]').content;
+                    const header = document.querySelector('meta[name="_csrf_header"]').content;
+                    $.ajaxSetup({
+                        headers: {
+                            [header]: token
+                        }
+                    });
                     images.forEach((imageId, index) => {
                         const imgContainer = document.createElement('div');
                         imgContainer.className = 'image-container';

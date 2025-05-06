@@ -6,6 +6,13 @@ $(document).ready(function () {
     const $newPasswordInput = $('#newPassword');
     const $errors = $('#errors');
     const url = document.getElementById("myForm").getAttribute("data-url");
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    $.ajaxSetup({
+        headers: {
+            [header]: token
+        }
+    });
     $('#sendCodeBtn').on('click', function () {
         const email = $emailInput.val().trim();
 

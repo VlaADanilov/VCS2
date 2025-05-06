@@ -1,5 +1,11 @@
 $(document).ready(function () {
-
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    $.ajaxSetup({
+        headers: {
+            [header]: token
+        }
+    });
     $('#myForm').on('submit', function (event) {
         event.preventDefault();
 

@@ -1,12 +1,18 @@
 let url
 $(document).ready(function () {
-    url = del.getAttribute("data-url")
+    url = document.getElementById("urlInfo").getAttribute("data-url")
+    const token = document.querySelector('meta[name="_csrf"]').content;
+    const header = document.querySelector('meta[name="_csrf_header"]').content;
+    $.ajaxSetup({
+        headers: {
+            [header]: token
+        }
+    });
 })
 
 function handleDelete(id) {
     const isConfirmed = confirm("Вы уверены, что хотите удалить этого сотрудника и лишить его всех прав?");
     if (isConfirmed) {
-        const url = del.getAttribute("data-url");
         $.ajax({
             url: url + "/" + id,
             type: 'DELETE',

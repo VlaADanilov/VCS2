@@ -1,5 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <title>Список автомобилей</title>
     <link rel="stylesheet" th:href="@{/resources/css/menu.css}">
