@@ -5,11 +5,13 @@ import com.technokratos.vcs2.model.dto.request.RegisterUserDto;
 import com.technokratos.vcs2.model.form.LoginForm;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityController implements SecurityApi {
     private final UserServiceImpl userService;
 
@@ -33,6 +35,7 @@ public class SecurityController implements SecurityApi {
 
 
     public void addUser(RegisterUserDto regDto) {
+        log.info("Request to save user: {}", regDto.toString());
         userService.saveUser(regDto);
     }
 }

@@ -13,6 +13,7 @@ import com.technokratos.vcs2.repository.ImageRepository;
 import com.technokratos.vcs2.repository.UserRepository;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AutoServiceImpl implements AutoService {
     private final AutoRepository autoRepository;
     private final BrandService brandService;
@@ -37,39 +39,49 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public UUID addAuto(AutoRequestDto auto) {
+        log.info("Adding new auto with data: {}", auto);
         UUID autoId = UUID.randomUUID();
         Auto result = autoMapper.toAuto(auto);
         result.setId(autoId);
         User user = UserReturner.getCurrentUser().get();
         result.setUser(user);
         autoRepository.save(result);
+        log.info("Auto added successfully with ID: {}", autoId);
         return autoId;
     }
 
     @Override
     public List<ListElementAutoResponseDto> getAllAutos(int page, int size, UUID brand, String sort, String order) {
-        List<Auto> all = findFilteredAndSorted(brand,sort,order, PageRequest.of(page, size), null);
-        return getListElementAutoResponseDtos(all);
+        log.info("Fetching all autos (page: {}, size: {}, brand: {}, sort: {}, order: {})", page, size, brand, sort, order);
+        List<Auto> all = findFilteredAndSorted(brand, sort, order, PageRequest.of(page, size), null);
+        List<ListElementAutoResponseDto> responseDtos = getListElementAutoResponseDtos(all);
+        log.info("Found {} autos", responseDtos.size());
+        return responseDtos;
     }
 
     @Override
     public List<AutoResponseDto> getAutosByName(String name) {
+        log.warn("Method getAutosByName is not implemented yet");
         return List.of();
     }
 
     @Override
     public AutoResponseDto getAutoById(UUID id) {
+        log.info("Fetching auto by ID: {}", id);
         Optional<Auto> byId = autoRepository.findById(id);
         if (byId.isPresent()) {
             Auto auto = byId.get();
+            log.info("Auto found: {}", auto.getId());
             return autoMapper.toAutoResponseDto(auto);
         } else {
+            log.warn("Auto not found with ID: {}", id);
             throw new AutoNotFoundException(id);
         }
     }
 
     @Override
     public void updateAuto(AutoRequestDto auto, UUID id) {
+        log.info("Updating auto with ID: {}", id);
         checkForExistsAuto(id);
         Auto result = autoMapper.toAuto(auto);
         result.setId(id);
@@ -77,72 +89,92 @@ public class AutoServiceImpl implements AutoService {
         Auto auto1 = autoRepository.findById(id).orElseThrow(() -> new AutoNotFoundException(id));
         result.setImages(auto1.getImages());
         autoRepository.save(result);
+        log.info("Auto updated successfully: {}", id);
     }
 
     public void checkForExistsAuto(UUID id) {
         if (!autoRepository.existsById(id)) {
+            log.warn("Auto does not exist with ID: {}", id);
             throw new AutoNotFoundException(id);
         }
     }
 
     @Override
     public void addImageToAuto(UUID autoId, UUID imageId) {
+        log.info("Adding image {} to auto {}", imageId, autoId);
         Auto auto = autoRepository.findById(autoId).orElseThrow(() -> new AutoNotFoundException(autoId));
         auto.getImages().add(imageRepository.getReferenceById(imageId));
         autoRepository.save(auto);
+        log.info("Image added successfully to auto {}", autoId);
     }
 
     @Override
     public Long getAllAutosPagesCount() {
         long count = autoRepository.count();
-        return count % 10 == 0 ? count / 10 : count / 10 + 1;
+        Long totalPages = count % 10 == 0 ? count / 10 : count / 10 + 1;
+        log.info("Total pages for all autos: {}", totalPages);
+        return totalPages;
     }
 
     @Override
     public void deleteAuto(UUID id) {
+        log.info("Deleting auto with ID: {}", id);
         Auto auto = autoRepository.findById(id).orElseThrow(() -> new AutoNotFoundException(id));
-        List<Image> list = new ArrayList<>();
-        for (Image image : auto.getImages()) {
-            list.add(image);
-        }
+        List<Image> list = new ArrayList<>(auto.getImages());
 
         for (Image image : list) {
+            log.info("Deleting associated image: {}", image.getId());
             imageService.deleteImage(image.getId(), id);
         }
 
         autoRepository.deleteById(id);
+        log.info("Auto deleted successfully: {}", id);
     }
 
     @Override
-    public List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size, String sort, String order, UUID brand_id) {
+    public List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId, int page, int size, String sort, String order, UUID brand_id) {
+        log.info("Fetching autos for user ID: {}", userId);
         userService.checkForExist(userId);
         List<Auto> list = findFilteredAndSorted(brand_id, sort, order, PageRequest.of(page,size), userId);
-        return getListElementAutoResponseDtos(list);
+        List<ListElementAutoResponseDto> responseDtos = getListElementAutoResponseDtos(list);
+        log.info("Found {} autos for user {}", responseDtos.size(), userId);
+        return responseDtos;
     }
 
     private List<ListElementAutoResponseDto> getListElementAutoResponseDtos(List<Auto> all) {
+        log.debug("Mapping {} autos to ListElementAutoResponseDto", all.size());
         List<ListElementAutoResponseDto> rez = all.stream().map(autoMapper::toListElementAutoResponseDto).toList();
+        log.debug("Mapped {} autos to Dto", rez.size());
         return rez;
     }
 
     public boolean isOwner(UUID autoId, String username) {
+        log.debug("Checking if user {} owns auto {}", username, autoId);
         return autoRepository.findById(autoId)
-                .map(auto -> auto.getUser().getUsername().equals(username))
+                .map(auto -> {
+                    boolean isOwner = auto.getUser().getUsername().equals(username);
+                    log.debug("Ownership check result for {}: {}", autoId, isOwner);
+                    return isOwner;
+                })
                 .orElse(false);
     }
 
     @Override
     public Long getAutoPagesCount(UUID userID, UUID brandID) {
+        log.info("Calculating pages for user {} and brand {}", userID, brandID);
         Long l;
         if (brandID == null) {
             l = autoRepository.countOf(userID);
         } else {
             l = autoRepository.countOf(userID, brandID);
         }
-        return l % 10 == 0 ? l / 10 : l / 10 + 1;
+        Long totalPages = l % 10 == 0 ? l / 10 : l / 10 + 1;
+        log.info("Total pages for user {} and brand {}: {}", userID, brandID, totalPages);
+        return totalPages;
     }
 
     public List<Auto> findFilteredAndSorted(UUID brand, String sort, String order, Pageable pageable, UUID user) {
+        log.info("Filtering and sorting autos (brand: {}, sort: {}, order: {}, user: {})", brand, sort, order, user);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Auto> query = cb.createQuery(Auto.class);
         Root<Auto> root = query.from(Auto.class);
@@ -178,16 +210,22 @@ public class AutoServiceImpl implements AutoService {
 
         // Сборка и выполнение запроса
         query.select(root).where(predicates.toArray(new Predicate[0]));
-        return entityManager.createQuery(query)
+        List<Auto> result = entityManager.createQuery(query)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
+
+        log.info("Filtered and sorted autos: {} items", result.size());
+        return result;
     }
 
     @Override
     public Long getAllAutosPagesCount(UUID brandId) {
+        log.info("Calculating total pages for brand {}", brandId);
         Long l = autoRepository.countOfBrandCars(brandId);
         if (l == 0) l = 1L;
-        return l % 10 == 0? l / 10 : l / 10 + 1;
+        Long totalPages = l % 10 == 0 ? l / 10 : l / 10 + 1;
+        log.info("Total pages for brand {}: {}", brandId, totalPages);
+        return totalPages;
     }
 }

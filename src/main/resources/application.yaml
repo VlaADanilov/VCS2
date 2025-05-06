@@ -3,13 +3,17 @@ spring:
     name: VCS2
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
   datasource:
     url: jdbc:postgresql://localhost:5432/vcs2
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    default-schema: public
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
 springdoc:
   show-login-endpoint: true
 server:

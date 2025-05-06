@@ -8,6 +8,7 @@ import com.technokratos.vcs2.service.BrandService;
 import com.technokratos.vcs2.service.UserServiceImpl;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class UserController implements UserApi {
     private final UserServiceImpl userService;
     private final AutoService autoService;

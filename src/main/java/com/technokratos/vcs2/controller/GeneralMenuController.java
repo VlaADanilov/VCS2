@@ -17,7 +17,7 @@ public class GeneralMenuController implements GeneralApi {
         log.info("Request for general menu");
         Optional<User> currentUser = UserReturner.getCurrentUser();
         currentUser.ifPresent(user -> model.addAttribute("user", user));
-        log.info("User is {}", currentUser);
+        currentUser.ifPresent(user -> log.info("User in general menu: {}", user.getUsername()));
         return "general_menu";
     }
 }
