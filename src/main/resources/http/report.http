@@ -1,0 +1,58 @@
+@baseUrl = http://localhost:8080
+
+POST {{baseUrl}}/logout
+
+###
+POST {{baseUrl}}/login?username=Vlad&password=123456
+###
+# @no-redirect
+GET {{baseUrl}}/report
+
+###
+POST {{baseUrl}}/logout
+
+###
+POST {{baseUrl}}/login?username=test&password=1234
+###
+# @no-redirect
+GET {{baseUrl}}/report
+
+###
+// Не сущетсвующее авто
+POST {{baseUrl}}/report/64706eba-ee59-4fce-a211-d2b38344d028
+Content-Type: application/json
+
+{
+  "comment": "Comment"
+}
+
+
+###
+// Сущетсвующее авто, но пустой коммент
+POST {{baseUrl}}/report/7dd0aeaf-76b0-4188-9879-6234e0363ff2
+Content-Type: application/json
+
+{
+  "comment": ""
+}
+
+###
+// Всё верно
+POST {{baseUrl}}/report/7dd0aeaf-76b0-4188-9879-6234e0363ff2
+Content-Type: application/json
+
+{
+  "comment": "Comment"
+}
+
+###
+# @no-redirect
+GET {{baseUrl}}/report
+
+###
+// Добавим просмотр на жалобу
+POST {{baseUrl}}/report/addView/fe096c76-e25c-4ec1-917b-18f377854527
+
+###
+// Удалю жалобу
+DELETE {{baseUrl}}/report/fe096c76-e25c-4ec1-917b-18f377854527

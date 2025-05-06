@@ -47,7 +47,7 @@ public interface CurrencyApi {
                                         example = "RUB",
                                         required = true)
                             String currency,
-                            @RequestParam
+                            @RequestParam("amount")
                             @Parameter(description = "Сумма в рублях",
                                     example = "1000",
                                     required = true)

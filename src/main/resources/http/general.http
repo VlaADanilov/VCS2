@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:8080
+
+// Не вошёл в систему
+GET {{baseUrl}}
+
+###
+// Вход в систему
+# @no-redirect
+POST {{baseUrl}}/login?username=Vlad&password=12345
+
+###
+// Вошёл в систему
+GET {{baseUrl}}
+Cookie: JSESSIONID=F5AECD9009D7B6D64BD03BB809E2E631
+
+
+

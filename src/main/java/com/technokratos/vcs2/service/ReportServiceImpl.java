@@ -1,5 +1,6 @@
 package com.technokratos.vcs2.service;
 
+import com.technokratos.vcs2.exception.notFound.AutoNotFoundException;
 import com.technokratos.vcs2.exception.notFound.ReportNotFoundException;
 import com.technokratos.vcs2.mapper.ReportMapper;
 import com.technokratos.vcs2.model.dto.request.ReportRequestDto;
@@ -34,6 +35,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public UUID addReport(ReportRequestDto report, UUID userId, UUID autoId) {
+        if (!autoRepository.existsById(autoId)) {
+            throw new AutoNotFoundException(autoId);
+        }
         Report result = new Report();
         UUID id = UUID.randomUUID();
         result.setId(id);

@@ -1,0 +1,79 @@
+@baseUrl = http://localhost:8080
+
+POST {{baseUrl}}/logout
+
+###
+GET {{baseUrl}}/auto
+
+###
+//Существующее авто
+GET {{baseUrl}}/auto/a884f46f-d8bf-4275-bc5a-ca1f6ccb7145
+
+###
+//Неуществующее авто
+GET {{baseUrl}}/auto/64706eba-ee59-4fce-a211-d2b38344d028
+
+###
+//Не вошли ещё
+GET {{baseUrl}}/auto/add
+
+###
+//Не вошли ещё
+GET {{baseUrl}}/auto/myCars
+
+###
+POST {{baseUrl}}/login?username=admin&password=admin
+
+###
+//Вошли
+GET {{baseUrl}}/auto/add
+
+###
+//Вошли
+GET {{baseUrl}}/auto/myCars
+
+###
+//Чужое объявление
+GET {{baseUrl}}/auto/d84b75fe-c236-4fb3-b487-7a8269589c7f/updateForm
+
+###
+//Своё объявление
+GET {{baseUrl}}/auto/a884f46f-d8bf-4275-bc5a-ca1f6ccb7145/updateForm
+
+###
+//Некорректно
+POST {{baseUrl}}/auto
+Content-Type: application/json
+
+{
+  "model": "1",
+  "year": 1928,
+  "price": -1,
+  "mileage": -1,
+  "city": "1",
+  "phone": "1",
+  "description": "",
+  "brand_id": "515f7ed1-b129-4537-af32-d73f36e9a371"
+}
+
+###
+//Корректно
+POST {{baseUrl}}/auto
+Content-Type: application/json
+
+{
+  "model": "1234",
+  "year": 2025,
+  "price": 1,
+  "mileage": 1,
+  "city": "1234",
+  "phone": "+79530156218",
+  "description": "",
+  "brand_id": "515f7ed1-b129-4537-af32-d73f36e9a371"
+}
+
+###
+GET {{baseUrl}}/auto/fcb08dbd-0a33-41c7-821a-598b79ac4e07
+
+###
+DELETE {{baseUrl}}/auto/fcb08dbd-0a33-41c7-821a-598b79ac4e07

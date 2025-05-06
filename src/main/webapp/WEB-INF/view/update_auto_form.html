@@ -41,6 +41,9 @@
             <label for="city">City:</label>
             <input type="text" id="city" name="city" th:value="${auto.city}" required /><br />
 
+            <label for="phone">Phone (Format: +7##########):</label>
+            <input type="text" id="phone" name="phone" th:value="${auto.phone}" required pattern="^\+7[0-9]{10}$"/><br />
+
             <label for="description">Description:</label>
             <textarea id="description" name="description" th:text="${auto.description}"></textarea><br />
 

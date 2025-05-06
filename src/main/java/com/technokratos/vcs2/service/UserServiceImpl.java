@@ -106,4 +106,10 @@ public class UserServiceImpl {
         }
         return l % 10 == 0 ? l / 10 : l / 10 + 1;
     }
+
+    public void checkForExist(UUID userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new UserNotFoundException(userId);
+        }
+    }
 }

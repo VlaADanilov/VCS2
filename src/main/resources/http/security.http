@@ -1,0 +1,65 @@
+@baseUrl = http://localhost:8080
+
+POST {{baseUrl}}/logout
+
+###
+GET {{baseUrl}}/login
+
+###
+GET {{baseUrl}}/registration
+
+###
+POST {{baseUrl}}/login?username=Vlad&password=123456
+
+###
+GET {{baseUrl}}/login
+
+###
+GET {{baseUrl}}/registration
+
+###
+POST {{baseUrl}}/logout
+
+###
+//Некорректные данные
+POST {{baseUrl}}/registration
+Content-Type: application/json
+
+{
+  "username": "V",
+  "password": "6",
+  "email": "1"
+}
+
+###
+//Некорректные данные
+POST {{baseUrl}}/registration
+Content-Type: application/json
+
+{
+  "username": "Vlad",
+  "password": "6a5",
+  "email": "helloampro@gmail.com"
+}
+
+###
+//Некорректные данные
+POST {{baseUrl}}/registration
+Content-Type: application/json
+
+{
+  "username": "Vl",
+  "password": "6a5",
+  "email": "helloampro@gmail.com"
+}
+
+###
+//Корректные данные
+POST {{baseUrl}}/registration
+Content-Type: application/json
+
+{
+  "username": "Vl",
+  "password": "6a5",
+  "email": "helloampo@gmail.com"
+}

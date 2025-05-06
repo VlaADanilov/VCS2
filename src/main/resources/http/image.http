@@ -1,0 +1,47 @@
+@baseUrl = http://localhost:8080/api/image
+
+// Существующая картинка
+GET {{baseUrl}}/0e2f5c50-64de-4e40-851c-b4ed7def8321
+
+###
+// Некорректный формат UUID
+GET {{baseUrl}}/0e2f5c50-64
+
+###
+// Неуществующая картинка
+GET {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028
+
+###
+// Не вошёл в систему и пытаюсь загрузить картинку
+POST {{baseUrl}}/upload/auto/483bbc50-2bd4-4f18-a184-79e67b6db89b
+Content-Type: multipart/form-data; boundary=----my-boundary
+
+------my-boundary
+Content-Disposition: form-data; name="file"; filename="tiguan.png"
+Content-Type: image/png
+
+<@C:/Users/User/Pictures/tiguan.png>
+------my-boundary--
+
+###
+// вход в систему
+# @no-redirect
+POST http://localhost:8080/login?username=admin&password=admin
+
+
+###
+// Вошёл в аккаунт владельца и пытаюсь загрузить картинку
+POST {{baseUrl}}/upload/auto/483bbc50-2bd4-4f18-a184-79e67b6db89b
+Content-Type: multipart/form-data; boundary=----my-boundary
+Cookie: JSESSIONID=68192A48B20FC3A67D420BDFAA5752D9;
+
+------my-boundary
+Content-Disposition: form-data; name="file"; filename="tiguan.png"
+Content-Type: image/png
+
+<@src/main/webapp/icons/back.jpg>
+------my-boundary--
+
+###
+// Удаляю
+DELETE {{baseUrl}}/auto/483bbc50-2bd4-4f18-a184-79e67b6db89b/delete/7bc5c66c-614e-4e3e-911d-78f5aaa63581

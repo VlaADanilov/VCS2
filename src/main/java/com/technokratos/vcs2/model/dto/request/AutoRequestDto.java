@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
@@ -30,8 +31,11 @@ public class AutoRequestDto {
     @NotBlank
     private String city;
 
+    @Pattern(regexp = "^\\+7[0-9]{10}$", message = "Неверный формат номера телефона")
+    private String phone;
 
     private String description;
 
     private UUID brand_id;
+
 }

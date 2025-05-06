@@ -12,7 +12,8 @@ $(document).ready(function () {
             price: $('#price').val(),
             mileage: $('#mileage').val(),
             city: $('#city').val(),
-            description: $('#description').val()
+            description: $('#description').val(),
+            phone: $('#phone').val()
         };
 
         $.ajax({

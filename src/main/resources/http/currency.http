@@ -1,0 +1,9 @@
+@baseUrl = http://localhost:8080/currency
+
+GET {{baseUrl}}
+
+###
+GET {{baseUrl}}/toOtherCurrency?currency=USD&amount=1000
+
+###
+GET {{baseUrl}}/toOtherCurrency?currency=EUR&amount=1000

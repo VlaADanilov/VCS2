@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:8080
+
+GET {{baseUrl}}/user
+
+###
+// Существующий пользователь
+GET{{baseUrl}}/user/19b052e4-7003-4cf5-8014-27264aa7698f/auto
+
+###
+// Неверный UUID
+GET{{baseUrl}}/user/19b052e4/auto
+
+###
+// Несуществующий пользователь
+GET{{baseUrl}}/user/c1068634-511f-4942-86b1-d6556804b904/auto
+

@@ -1,0 +1,39 @@
+@baseUrl = http://localhost:8080/admin
+
+// Не вошёл в систему
+POST {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028/doModerator
+
+###
+// Вошёл, но не администратор
+# @no-redirect
+POST http://localhost:8080/login?username=admin&password=admin
+
+###
+// Несуществующий userId
+POST {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028/doModerator
+Cookie: JSESSIONID=E1E7C66E9384AB8507D5F8B741F13219
+
+###
+// Вошёл администратор
+# @no-redirect
+POST http://localhost:8080/login?username=test&password=1234
+
+###
+// Несуществующий userId
+POST {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028/doModerator
+Cookie: JSESSIONID=3E9929094E43075174143CC1CCEA3E45
+
+###
+// Существующий userId
+POST {{baseUrl}}/907f1e3c-3f70-4d45-8f8c-34f7940ede00/doModerator
+Cookie: JSESSIONID=3E9929094E43075174143CC1CCEA3E45
+
+###
+// Существующий userId
+POST {{baseUrl}}/907f1e3c-3f70-4d45-8f8c-34f7940ede00/doUser
+Cookie: JSESSIONID=3E9929094E43075174143CC1CCEA3E45
+
+###
+// Несуществующий userId
+POST {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028/doUser
+Cookie: JSESSIONID=3E9929094E43075174143CC1CCEA3E45

@@ -5,7 +5,6 @@ import com.technokratos.vcs2.model.dto.response.AutoResponseDto;
 import com.technokratos.vcs2.model.dto.response.ListElementAutoResponseDto;
 import com.technokratos.vcs2.model.entity.Auto;
 import com.technokratos.vcs2.service.BrandService;
-import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +54,7 @@ public class AutoMapper {
                 .city(auto.getCity())
                 .description(auto.getDescription())
                 .brand(brandService.getReferenceById(auto.getBrand_id()))
+                .phone(auto.getPhone())
                 .build();
     };
 }

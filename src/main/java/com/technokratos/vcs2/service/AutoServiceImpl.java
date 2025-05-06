@@ -1,6 +1,5 @@
 package com.technokratos.vcs2.service;
 
-import com.technokratos.vcs2.exception.notFound.ImageNotFoundException;
 import com.technokratos.vcs2.exception.notFound.AutoNotFoundException;
 import com.technokratos.vcs2.mapper.AutoMapper;
 import com.technokratos.vcs2.model.dto.request.AutoRequestDto;
@@ -11,9 +10,9 @@ import com.technokratos.vcs2.model.entity.Image;
 import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.repository.AutoRepository;
 import com.technokratos.vcs2.repository.ImageRepository;
+import com.technokratos.vcs2.repository.UserRepository;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,8 @@ public class AutoServiceImpl implements AutoService {
     private final ImageService imageService;
     private final AutoMapper autoMapper;
     private final EntityManager entityManager;
+    private final UserServiceImpl userService;
+
     @Override
     public UUID addAuto(AutoRequestDto auto) {
         UUID autoId = UUID.randomUUID();
@@ -114,6 +115,7 @@ public class AutoServiceImpl implements AutoService {
 
     @Override
     public List<ListElementAutoResponseDto> getAllAutoFromUser(UUID userId,int page, int size, String sort, String order, UUID brand_id) {
+        userService.checkForExist(userId);
         List<Auto> list = findFilteredAndSorted(brand_id, sort, order, PageRequest.of(page,size), userId);
         return getListElementAutoResponseDtos(list);
     }

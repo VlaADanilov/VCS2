@@ -1,0 +1,70 @@
+@baseUrl = http://localhost:8080
+
+POST {{baseUrl}}/logout
+
+###
+GET {{baseUrl}}/employee
+
+###
+GET {{baseUrl}}/employee/add
+
+###
+POST {{baseUrl}}/login?username=Vlad&password=123456
+
+###
+GET {{baseUrl}}/employee/add
+
+###
+POST {{baseUrl}}/logout
+
+###
+POST {{baseUrl}}/login?username=test&password=1234
+
+###
+GET {{baseUrl}}/employee/add
+
+###
+//Некорректные данные
+POST {{baseUrl}}/employee
+Content-Type: application/json
+
+{
+  "name": "Vla",
+  "profession": "123",
+  "description": "desc",
+  "phone": "+7999",
+  "accountName":"1"
+}
+
+###
+//Некорректные данные
+POST {{baseUrl}}/employee
+Content-Type: application/json
+
+{
+  "name": "Vlad",
+  "profession": "1234",
+  "description": "desc",
+  "phone": "+79999999999",
+  "accountName":"1234"
+}
+
+###
+//Корректные данные
+POST {{baseUrl}}/employee
+Content-Type: application/json
+
+{
+  "name": "Vlad",
+  "profession": "1234",
+  "description": "desc",
+  "phone": "+79999999999",
+  "accountName":"admin"
+}
+
+###
+GET {{baseUrl}}/employee
+
+###
+//Удалим
+DELETE {{baseUrl}}/employee/c71a78a5-500b-47c3-b932-2be9d8004a08

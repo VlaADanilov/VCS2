@@ -1,0 +1,54 @@
+@baseUrl = http://localhost:8080/like
+
+//Выход из системы
+POST http://localhost:8080/logout
+
+###
+//Пытаюсь получить мои лайки
+GET {{baseUrl}}
+
+###
+//Вххожу в аккаунт
+# @no-redirect
+POST http://localhost:8080/login?username=admin&password=admin
+
+###
+//Пытаюсь получить мои лайки
+GET {{baseUrl}}
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+###
+// Поставлю лайк на несуществующее объявление
+POST {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+
+###
+// Поставлю лайк на объявлению
+POST {{baseUrl}}/7dd0aeaf-76b0-4188-9879-6234e0363ff2
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+###
+// Повторяю
+POST {{baseUrl}}/7dd0aeaf-76b0-4188-9879-6234e0363ff2
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+###
+// Некорректный UUID
+POST {{baseUrl}}/6234e0363ff2
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+###
+// Удалю лайк с несуществующее объявление
+DELETE {{baseUrl}}/64706eba-ee59-4fce-a211-d2b38344d028
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+###
+// Удалю поставленный лайк
+DELETE {{baseUrl}}/7dd0aeaf-76b0-4188-9879-6234e0363ff2
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
+
+###
+// Повторяю
+DELETE {{baseUrl}}/7dd0aeaf-76b0-4188-9879-6234e0363ff2
+Cookie:JSESSIONID=8CD8320EADD4FA36BD4178D3CF46F6CC
