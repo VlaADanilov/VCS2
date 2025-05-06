@@ -6,6 +6,7 @@ import com.technokratos.vcs2.service.AutoService;
 import com.technokratos.vcs2.service.EmployeeService;
 import com.technokratos.vcs2.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ImageController implements ImageApi {
     private final AutoService autoService;
     private final ImageService imageService;
@@ -30,28 +32,33 @@ public class ImageController implements ImageApi {
 
     public ResponseEntity<String> upload(MultipartFile file,
                                          UUID auto_id) {
+        log.info("Uploading file " + file.getOriginalFilename() + " to auto with id " + auto_id);
         autoService.checkForExistsAuto(auto_id);
         ResponseEntity<String> response = imageService.uploadImage(file);
         if (response.getStatusCode().is2xxSuccessful()) {
             UUID image_id = imageService.saveImage(response.getBody());
             autoService.addImageToAuto(auto_id, image_id);
+            log.info("Image uploaded to auto with id " + image_id);
             return ResponseEntity.ok(image_id.toString());
         } else {
+            log.info(response.getBody());
             return response;
         }
     }
 
     public ResponseEntity<String> deleteImageFromAuto(UUID auto_id,
                                                       UUID image_id) {
+        log.info("Deleting image " + image_id + " from auto with id " + auto_id);
         autoService.checkForExistsAuto(auto_id);
         imageService.checkForExistsImageAndAutoContainsIt(auto_id, image_id);
         imageService.deleteImage(image_id, auto_id);
-
+        log.info("Successfully deleted image " + image_id + " from auto with id " + auto_id);
         return ResponseEntity.ok().build();
     }
 
 
     public ResponseEntity<Resource> viewImage(UUID image_id) {
+        log.info("Viewing image " + image_id);
         Image image = imageService.getImageById(image_id);
         String filename = image.getImage();
         try {
@@ -75,21 +82,24 @@ public class ImageController implements ImageApi {
 
     public ResponseEntity<String> deleteEmployeeImage(UUID employeeId,
                                                       UUID imageId) {
+        log.info("Deleting employee image " + imageId + " from employee with id " + employeeId);
         employeeService.checkForExistsEmployee(employeeId);
         imageService.checkForExistsImageAndEmployeeContainsIt(employeeId,imageId);
         imageService.deleteImageFromEmployee(imageId, employeeId);
-
+        log.info("success");
         return ResponseEntity.ok().build();
     }
 
 
     public ResponseEntity<String> uploadImageToEmployee(MultipartFile file,
                                                         UUID employeeId) {
+        log.info("Uploading file " + file.getOriginalFilename() + " to employee with id " + employeeId);
         employeeService.checkForExistsEmployee(employeeId);
         ResponseEntity<String> response = imageService.uploadImage(file);
         if (response.getStatusCode().is2xxSuccessful()) {
             UUID image_id = imageService.saveImage(response.getBody());
             employeeService.addImageToEmployee(employeeId, image_id);
+            log.info("Image uploaded to employee with id " + image_id);
             return ResponseEntity.ok(image_id.toString());
         } else {
             return response;

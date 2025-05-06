@@ -1,15 +1,11 @@
 package com.technokratos.vcs2.controller.advice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.technokratos.vcs2.exception.ImageExistInThisEmployeeException;
 import com.technokratos.vcs2.exception.LikeException;
 import com.technokratos.vcs2.exception.ServiceException;
-import com.technokratos.vcs2.exception.notFound.BrandNotFoundException;
 import com.technokratos.vcs2.exception.notFound.NotFoundException;
 import com.technokratos.vcs2.exception.notFound.UserNotFoundException;
 import com.technokratos.vcs2.exception.registration.RegistrationException;
-import com.technokratos.vcs2.exception.registration.UsernameExistsException;
-import com.technokratos.vcs2.model.dto.response.ExceptionMessage;
 import com.technokratos.vcs2.model.dto.response.ValidationErrorResponse;
 import com.technokratos.vcs2.model.dto.response.Violation;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +23,7 @@ import java.util.List;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class ErrorHandlingControllerAdvice {
-    private final ObjectMapper objectMapper;
+
     @ResponseBody
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -14,6 +14,7 @@ import com.technokratos.vcs2.util.UserReturner;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,8 +26,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Controller()
+@Controller
 @RequiredArgsConstructor
+@Slf4j
 public class AutoController implements AutoApi {
     private final AutoService autoService;
     private final BrandService brandService;
@@ -113,11 +115,13 @@ public class AutoController implements AutoApi {
 
 
     public UUID addAuto(AutoRequestDto auto) {
+        log.info("New auto add request: {}", auto.toString());
         return autoService.addAuto(auto);
     }
 
 
     public void deleteAuto(UUID carId) {
+        log.info("Delete auto request: {}", carId);
         autoService.deleteAuto(carId);
     }
 
@@ -132,6 +136,7 @@ public class AutoController implements AutoApi {
 
 
     public void updateAuto(UUID carId, AutoRequestDto auto) {
+        log.info("Update auto wtih id {} request: {}", carId,auto.toString());
         autoService.updateAuto(auto, carId);
     }
 

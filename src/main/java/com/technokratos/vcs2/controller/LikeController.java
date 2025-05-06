@@ -5,6 +5,7 @@ import com.technokratos.vcs2.service.BrandService;
 import com.technokratos.vcs2.service.LikeService;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class LikeController implements LikeApi {
     private final LikeService likeService;
     private final BrandService brandService;
@@ -44,11 +46,13 @@ public class LikeController implements LikeApi {
 
 
     public void addLike(UUID auto_id) {
+        log.info("Add like request to auto_id: {}, from user with id {}", auto_id, UserReturner.getCurrentUser().get().getId());
         likeService.addLike(UserReturner.getCurrentUser().get().getId(), auto_id);
     }
 
 
     public void deleteLike(UUID auto_id) {
+        log.info("Delete like from auto with id {}, from user with id {}", auto_id, UserReturner.getCurrentUser().get().getId());
         likeService.removeLike(UserReturner.getCurrentUser().get().getId(), auto_id);
     }
 }

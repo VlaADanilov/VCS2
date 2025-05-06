@@ -26,3 +26,10 @@ vcs:
     path: "/vcs"
 microservice:
   url: http://localhost:8082
+
+logging:
+  file:
+    name: logs/myapp.log
+    path: logs
+  level:
+    root: INFO

@@ -6,6 +6,7 @@ import com.technokratos.vcs2.model.entity.User;
 import com.technokratos.vcs2.service.EmployeeService;
 import com.technokratos.vcs2.util.UserReturner;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeController implements EmployeeApi {
     private final EmployeeService employeeService;
 
@@ -26,11 +28,13 @@ public class EmployeeController implements EmployeeApi {
 
 
     public void deleteEmployee(UUID emp_id) {
+        log.info("Deleting employee request with id {}", emp_id);
         employeeService.delete(emp_id);
     }
 
 
     public void addEmployee(EmployeeRequestDto employee) {
+        log.info("Adding employee request {}", employee);
         employeeService.add(employee);
     }
 
